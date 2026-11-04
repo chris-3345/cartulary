@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="207.39212mm"
+   height="207.39212mm"
+   viewBox="0 0 207.39212 207.39212"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4.4 (dcaf3e7d9e, 2026-05-05)"
+   sodipodi:docname="Playshelf-logo-light-bg.svg"
+   inkscape:export-filename="Playshelf-logo-dark-bg.svg"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     inkscape:document-units="mm"
+     inkscape:zoom="1"
+     inkscape:cx="620.5"
+     inkscape:cy="379.5"
+     inkscape:window-width="1815"
+     inkscape:window-height="1412"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1">
+    <inkscape:page
+       x="0"
+       y="0"
+       width="207.39212"
+       height="207.39212"
+       id="page2"
+       margin="0"
+       bleed="0" />
+  </sodipodi:namedview>
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-1.0474318,-46.087143)">
+    <rect
+       style="fill:#2e4070;fill-opacity:1;stroke-width:0.264583"
+       id="rect1"
+       width="207.39212"
+       height="207.39212"
+       x="1.0474318"
+       y="46.087143"
+       rx="35"
+       ry="35" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:76.6246px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';writing-mode:lr-tb;direction:ltr;fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:2.098;stroke-dasharray:none;stroke-opacity:1"
+       x="36.319725"
+       y="131.28389"
+       id="text23"><tspan
+         sodipodi:role="line"
+         id="tspan23"
+         style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:2.098;stroke-dasharray:none;stroke-opacity:1"
+         x="36.319725"
+         y="131.28389">G G</tspan></text>
+    <path
+       style="fill:#faffc6;fill-opacity:1;stroke:none;stroke-width:1.00606;stroke-dasharray:none;stroke-opacity:1"
+       d="m 92.779674,149.50033 -0.04342,88.87303 38.259556,-18.86681 39.13212,18.94722 0.37468,-89.34509 z"
+       id="path24"
+       sodipodi:nodetypes="cccccc" />
+    <path
+       style="fill:#2e4070;fill-opacity:1;stroke:none;stroke-width:0.730592;stroke-dasharray:none;stroke-opacity:1"
+       d="m 105.02048,152.50913 -0.0297,68.43605 26.20161,-14.52825 26.79918,14.59017 0.25659,-68.79956 z"
+       id="path25"
+       sodipodi:nodetypes="cccccc" />
+    <rect
+       style="fill:#faffc6;fill-opacity:1;stroke:none;stroke-width:2.9724"
+       id="rect2"
+       width="128.07617"
+       height="13.133108"
+       x="42.422321"
+       y="137.67696" />
+  </g>
+</svg>
