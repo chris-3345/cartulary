@@ -1,4 +1,5 @@
-// Holds most structs and pub enums except for AppState and Messages (and anything else relating specifically to the app's UI).
+// Holds structs and enums used by Playshelf
+// for game entries
 
 use chrono::NaiveDate;
 use uuid::Uuid;
