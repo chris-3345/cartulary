@@ -3,14 +3,13 @@ mod game;
 mod message;
 mod ui;
 
-use chrono::NaiveDate;
 use iced::widget::{container, row, text_editor};
 use iced::{Element, Fill, Font, padding};
 use uuid::Uuid;
 
 use crate::constants::{CREDITS, ICON_FONT, TITLE_FONT};
 use crate::game::{GameEntry, Platform, Rating, Status, Store};
-use crate::message::{AppState, FieldEdit, Message, Page};
+use crate::message::{AppState, Message, Page};
 use crate::ui::{page_content, sidebar};
 
 // Iced update & view ==========================
