@@ -35,7 +35,7 @@ fn update(state: &mut AppState, message: Message) {
                 state.credits.perform(action);
             }
         }
-        // See above comment (in the Message enum)
+        // See comment for this in message.rs (intentionally no-op)
         Message::Unused => (),
 
         // Non-page messages
