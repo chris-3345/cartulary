@@ -7,7 +7,7 @@
    viewBox="0 0 210.09852 47.617328"
    version="1.1"
    id="svg1"
-   inkscape:version="1.4.4 (dcaf3e7d9e, 2026-05-05)"
+   inkscape:version="1.4.4 (dcaf3e7, 2026-05-05)"
    sodipodi:docname="Playshelf-Wordmark.svg"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -24,12 +24,12 @@
      inkscape:deskcolor="#505050"
      inkscape:document-units="mm"
      inkscape:zoom="2.1433923"
-     inkscape:cx="472.6153"
+     inkscape:cx="472.84858"
      inkscape:cy="52.020342"
      inkscape:window-width="2560"
-     inkscape:window-height="1412"
-     inkscape:window-x="0"
-     inkscape:window-y="0"
+     inkscape:window-height="1417"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
      inkscape:window-maximized="1"
      inkscape:current-layer="layer1" />
   <defs
@@ -45,16 +45,10 @@
        style="font-size:48.0315px;font-family:'TeX Gyre Adventor';-inkscape-font-specification:'TeX Gyre Adventor';fill:#57c4d4;stroke:#57c4d4;stroke-width:2.9"
        aria-label="Playshelf"
        sodipodi:nodetypes="cccsssccccsssccccccssccccccsssssssccccccccccsscsssccssccssccccsssccssccccssccsccsscscccccccccccccccccccc" />
-    <text
-       xml:space="preserve"
-       style="font-size:9.61298px;font-family:'TeX Gyre Adventor';-inkscape-font-specification:'TeX Gyre Adventor';writing-mode:lr-tb;direction:ltr;fill:#31aac3;fill-opacity:1;stroke:#31b1c4;stroke-width:1.09754;stroke-opacity:1"
-       x="203.73686"
-       y="151.71754"
-       id="text2"><tspan
-         sodipodi:role="line"
-         id="tspan1"
-         style="fill:#31aac3;fill-opacity:1;stroke:#31b1c4;stroke-width:1.09755;stroke-opacity:1"
-         x="203.73686"
-         y="151.71754">TM</tspan></text>
+    <path
+       style="font-size:9.61298px;font-family:'TeX Gyre Adventor';-inkscape-font-specification:'TeX Gyre Adventor';fill:#31aac3;stroke:#31b1c4;stroke-width:0.498;stroke-dasharray:none"
+       d="m 209.13132,145.55454 h -2.49713 v 6.163 h -0.92938 v -6.163 h -2.49712 v -0.82612 h 5.92363 z m 7.16279,6.163 h -0.92938 v -6.02219 l -1.94325,4.09772 h -0.55387 l -1.92917,-4.09772 v 6.02219 h -0.86836 v -6.98912 h 1.26734 l 1.86345,3.89119 1.80244,-3.89119 h 1.2908 z"
+       id="text2"
+       aria-label="TM" />
   </g>
 </svg>
