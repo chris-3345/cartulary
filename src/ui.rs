@@ -6,6 +6,7 @@ use iced::widget::{
 };
 use iced::{Center, Element, Fill, Font, mouse, padding};
 
+// ======== SIDEBAR ========
 /// Builds the sidebar
 pub fn sidebar(state: &AppState) -> Element<'_, Message> {
     let page = state.page;
@@ -68,6 +69,20 @@ pub fn sidebar(state: &AppState) -> Element<'_, Message> {
     .into()
 }
 
+/// Sidebar nav button; uses the primary style when `active`, otherwise a muted one.
+fn nav_button<'a>(icon: char, label: &'a str, active: bool, msg: Message) -> Element<'a, Message> {
+    button(row![text(icon).font(ICON_FONT), text(label)].spacing(8))
+        .width(Fill)
+        .style(if active {
+            button::primary
+        } else {
+            button::secondary
+        })
+        .on_press(msg)
+        .into()
+}
+
+// ======== MAIN PAGE CONTENT ========
 /// Builds the page content
 pub fn page_content(state: &AppState) -> Element<'_, Message> {
     match state.page {
@@ -131,18 +146,5 @@ fn game_card(game: &GameEntry) -> Element<'_, Message> {
     mouse_area(card)
         .on_press(Message::OpenDetails(game.id))
         .interaction(mouse::Interaction::Pointer)
-        .into()
-}
-
-/// Sidebar nav button; uses the primary style when `active`, otherwise a muted one.
-fn nav_button<'a>(icon: char, label: &'a str, active: bool, msg: Message) -> Element<'a, Message> {
-    button(row![text(icon).font(ICON_FONT), text(label)].spacing(8))
-        .width(Fill)
-        .style(if active {
-            button::primary
-        } else {
-            button::secondary
-        })
-        .on_press(msg)
         .into()
 }
