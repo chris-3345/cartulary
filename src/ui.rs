@@ -2,9 +2,11 @@
 
 use crate::{AppState, GameEntry, ICON_FONT, Message, Page, TITLE_FONT};
 use iced::widget::{
-    button, column, container, mouse_area, row, scrollable, space, text, text_editor,
+    button, column, container, mouse_area, row, scrollable, space, svg, text, text_editor,
 };
 use iced::{Center, Element, Fill, Font, mouse, padding};
+
+use crate::constants::WORDMARK;
 
 // ======== SIDEBAR ========
 /// Builds the sidebar
@@ -19,6 +21,9 @@ pub fn sidebar(state: &AppState) -> Element<'_, Message> {
 
     container(
         column![
+            container(svg(svg::Handle::from_memory(WORDMARK)).width(175))
+                .center_x(Fill)
+                .padding(padding::bottom(10).top(5)),
             nav_button(
                 '\u{e0e9}',
                 "Library",

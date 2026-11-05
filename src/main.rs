@@ -1,13 +1,17 @@
+// Stop console from showing up on Windows release builds
+#![cfg_attr(all(windows, not(debug_assertions)), windows_subsystem = "windows")]
+
 mod constants;
 mod game;
+mod icon;
 mod message;
 mod ui;
 
 use iced::widget::{container, row, text_editor};
-use iced::{Element, Fill, Font, padding};
+use iced::{Element, Fill, Font, padding, window};
 use uuid::Uuid;
 
-use crate::constants::{CREDITS, ICON_FONT, TITLE_FONT};
+use crate::constants::{APP_ID, CREDITS, ICON_FONT, TITLE_FONT};
 use crate::game::{GameEntry, Platform, Rating, Status, Store};
 use crate::message::{AppState, Message, Page};
 use crate::ui::{page_content, sidebar};
@@ -60,7 +64,19 @@ fn view(state: &AppState) -> Element<'_, Message> {
 // Init ==========================
 
 fn theme(_state: &AppState) -> iced::Theme {
-    iced::Theme::TokyoNight
+    iced::Theme::Nord
+}
+
+fn window_settings() -> window::Settings {
+    window::Settings {
+        icon: icon::load_icon(),
+        #[cfg(target_os = "linux")]
+        platform_specific: window::settings::PlatformSpecific {
+            application_id: APP_ID.to_string(),
+            ..Default::default()
+        },
+        ..Default::default()
+    }
 }
 
 fn new() -> AppState {
@@ -104,5 +120,6 @@ fn main() -> iced::Result {
         .font(include_bytes!("../fonts/lucide-font-1.66.0/font/lucide.ttf").as_slice())
         .default_font(Font::with_name("Google Sans"))
         .theme(theme)
+        .window(window_settings())
         .run()
 }
