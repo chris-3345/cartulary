@@ -64,7 +64,7 @@ fn view(state: &AppState) -> Element<'_, Message> {
 // Init ==========================
 
 fn theme(_state: &AppState) -> iced::Theme {
-    iced::Theme::Nord
+    iced::Theme::CatppuccinMocha
 }
 
 fn window_settings() -> window::Settings {
