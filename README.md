@@ -1,4 +1,4 @@
-# Playshelf
+# Cartulary
 
 ## The app is NOT done yet.
 ### This README will be used as a status indicator until the app is done; once the app is done I will update the README to the actual README.

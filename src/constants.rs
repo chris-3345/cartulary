@@ -12,8 +12,8 @@ pub const ICON_FONT: Font = Font {
 
 pub const CREDITS: &str = include_str!("../CREDITS.txt");
 
-pub const WORDMARK: &[u8] = include_bytes!("../media/Playshelf-Wordmark.svg");
+pub const WORDMARK: &[u8] = include_bytes!("../media/Wordmarks/Cartulary-Wordmark-NoTM-DarkColors.svg");
 
-pub const ICON_SVG: &[u8] = include_bytes!("../media/Playshelf-logo-dark-bg.svg");
+pub const ICON_SVG: &[u8] = include_bytes!("../media/Icons/Cartulary-logo.svg");
 
-pub const APP_ID: &str = "io.github.chris_3345.Playshelf";
+pub const APP_ID: &str = "io.github.chris_3345.Cartulary";

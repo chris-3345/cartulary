@@ -1,4 +1,4 @@
-// Holds structs and enums used by Playshelf
+// Holds structs and enums used by Cartulary
 // for game entries
 
 use chrono::NaiveDate;

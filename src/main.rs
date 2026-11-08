@@ -114,7 +114,7 @@ fn new() -> AppState {
 
 fn main() -> iced::Result {
     iced::application(new, update, view)
-        .title("Playshelf")
+        .title("Cartulary")
         .font(include_bytes!("../fonts/google-sans/GoogleSans-Regular.ttf").as_slice())
         .font(include_bytes!("../fonts/google-sans/GoogleSans-Bold.ttf").as_slice())
         .font(include_bytes!("../fonts/lucide-font-1.66.0/font/lucide.ttf").as_slice())

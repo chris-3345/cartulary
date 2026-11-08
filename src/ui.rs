@@ -1,4 +1,4 @@
-// The builders for Playshelf's sidebar and other UI.
+// The builders for Cartulary's sidebar and other UI.
 
 use crate::{AppState, GameEntry, ICON_FONT, Message, Page, TITLE_FONT};
 use iced::widget::{

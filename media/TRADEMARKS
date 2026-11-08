@@ -1,14 +1,15 @@
 # Trademark Policy
 
-"Playshelf" and the Playshelf logo are trademarks of chris-3345
+"Cartulary" and the Cartulary logo are trademarks of chris-3345
 
 The logo artwork is licensed under CC BY-SA 4.0 (see `./LICENSE`).
 That license covers the artwork's copyright only and does not grant any trademark rights.
+This applies to EVERYTHING in this directory, including subfolders.
 
 ## Allowed without permission
 - Referring to the official project by name or logo (articles, reviews,
-  tutorials, links, "works with Playshelf").
-- Redistributing unmodified official releases under the Playshelf name.
+  tutorials, links, "works with Cartulary").
+- Redistributing unmodified official releases under the Cartulary name.
 - Distribution packages (e.g. Linux distros, Flathub) that apply only
   changes needed for packaging, compatibility, or security fixes, as long
   as the core functionality and user-facing behavior are unchanged.
@@ -17,7 +18,7 @@ That license covers the artwork's copyright only and does not grant any trademar
 - Using the name or logo to identify a fork or substantially modified
   version, or any derived product.
 - Using the name or logo in a way that suggests endorsement by or
-  affiliation with the Playshelf project.
+  affiliation with the Cartulary project.
 
 Forks and substantially modified versions must use a different name and
 logo.
