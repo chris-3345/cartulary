@@ -45,7 +45,7 @@ impl std::fmt::Display for Platform {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum Store {
     Steam,
     Gog,
@@ -83,7 +83,7 @@ impl std::fmt::Display for Store {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 pub struct Rating(u8);
 
 impl Rating {
@@ -100,7 +100,7 @@ impl Rating {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct GameEntry {
     pub id: Uuid,
     pub title: String,
