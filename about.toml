@@ -11,4 +11,5 @@ accepted = [
     "Unicode-3.0",
     "Zlib",
     "AGPL-3.0-or-later",
+    "MPL-2.0",
 ]

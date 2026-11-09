@@ -6,6 +6,7 @@ license = "AGPL-3.0-or-later"
 
 [dependencies]
 chrono = { version = "0.4.45", features = ["serde"] }
+directories = "6.0.0"
 iced = { version = "0.14", features = ["svg"] }
 resvg = "0.49.0"
 serde = { version = "1.0.229", features = ["derive"] }
