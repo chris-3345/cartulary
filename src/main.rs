@@ -81,35 +81,8 @@ fn window_settings() -> window::Settings {
 }
 
 fn new() -> AppState {
-    let games = vec![
-        GameEntry {
-            id: Uuid::now_v7(),
-            title: "Hades".to_string(),
-            platform: Platform::Pc,
-            store: Store::Steam,
-            status: Status::Finished,
-            rating: Rating::new(9),
-            year: Some(2020),
-            date_started: None,
-            date_finished: None,
-            notes: String::new(),
-        },
-        GameEntry {
-            id: Uuid::now_v7(),
-            title: "Portal 2".to_string(),
-            platform: Platform::Pc,
-            store: Store::Steam,
-            status: Status::Finished,
-            rating: Rating::new(10),
-            year: Some(2011),
-            date_started: None,
-            date_finished: None,
-            notes: String::new(),
-        },
-    ];
-    storage::save_entries(&games).unwrap();
     AppState {
-        games,
+        games: Vec::new(),
         page: Page::Library,
         credits: text_editor::Content::with_text(CREDITS),
     }
