@@ -1,4 +1,3 @@
-use iced::widget::svg;
 use iced::{Font, font};
 
 pub const TITLE_FONT: Font = Font {
@@ -12,7 +11,8 @@ pub const ICON_FONT: Font = Font {
 
 pub const CREDITS: &str = include_str!("../CREDITS.txt");
 
-pub const WORDMARK: &[u8] = include_bytes!("../media/Wordmarks/Cartulary-Wordmark-NoTM-DarkColors.svg");
+pub const WORDMARK: &[u8] =
+    include_bytes!("../media/Wordmarks/Cartulary-Wordmark-NoTM-DarkColors.svg");
 
 pub const ICON_SVG: &[u8] = include_bytes!("../media/Icons/Cartulary-logo.svg");
 
