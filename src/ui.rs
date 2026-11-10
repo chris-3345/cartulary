@@ -3,10 +3,12 @@
 use crate::{AppState, GameEntry, ICON_FONT, Message, Page, TITLE_FONT};
 use iced::widget::{
     button, column, container, mouse_area, row, scrollable, space, svg, text, text_editor,
+    text_input,
 };
 use iced::{Center, Element, Fill, Font, mouse, padding};
 
 use crate::constants::WORDMARK;
+use crate::message::FieldEdit;
 
 // ======== SIDEBAR ========
 /// Builds the sidebar
@@ -99,7 +101,16 @@ pub fn page_content(state: &AppState) -> Element<'_, Message> {
             )
             .into()
         }
-        Page::Create => text("Create page").into(),
+        Page::Create => container(
+            column![
+                text("Create an entry:").font(TITLE_FONT).size(36),
+                text_input("Title", &state.draft.title)
+                    .on_input(|t| Message::EditDraft(FieldEdit::Title(t))),
+            ]
+            .max_width(300)
+            .spacing(12),
+        )
+        .into(),
         Page::Detail(id) => text(format!("Detail page for ID {}", id)).into(),
         Page::Credits => text_editor(&state.credits)
             .on_action(Message::CreditsAction)

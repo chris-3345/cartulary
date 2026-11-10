@@ -5,8 +5,9 @@ use chrono::NaiveDate;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, Default)]
 pub enum Status {
+    #[default]
     Playing,
     Finished,
     Dropped,
@@ -24,8 +25,9 @@ impl std::fmt::Display for Status {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, Default)]
 pub enum Platform {
+    #[default]
     Pc,
     Nintendo,
     Xbox,
@@ -45,8 +47,9 @@ impl std::fmt::Display for Platform {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, Default)]
 pub enum Store {
+    #[default]
     Steam,
     Gog,
     Epic,
