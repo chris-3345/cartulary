@@ -109,6 +109,25 @@ impl Rating {
     pub fn value(&self) -> u8 {
         self.0
     }
+
+    pub const ALL: [Rating; 10] = [
+        Rating(1),
+        Rating(2),
+        Rating(3),
+        Rating(4),
+        Rating(5),
+        Rating(6),
+        Rating(7),
+        Rating(8),
+        Rating(9),
+        Rating(10),
+    ];
+}
+
+impl std::fmt::Display for Rating {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "★ {}/5", self.0 as f32 / 2.0)
+    }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

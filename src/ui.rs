@@ -1,6 +1,6 @@
 // The builders for Cartulary's sidebar and other UI.
 
-use crate::game::Status;
+use crate::game::{Rating, Status};
 use crate::{AppState, GameEntry, ICON_FONT, Message, Page, TITLE_FONT};
 use iced::widget::{
     button, column, container, mouse_area, pick_list, row, scrollable, space, svg, text,
@@ -112,11 +112,15 @@ pub fn page_content(state: &AppState) -> Element<'_, Message> {
                         .on_input(|t| Message::EditDraft(FieldEdit::Year(t))),
                 ]
                 .spacing(6),
-                row![pick_list(
-                    &Status::ALL[..],
-                    Some(state.draft.status.clone()),
-                    |s| Message::EditDraft(FieldEdit::Status(s))
-                ),]
+                row![
+                    pick_list(&Status::ALL[..], Some(state.draft.status.clone()), |s| {
+                        Message::EditDraft(FieldEdit::Status(s))
+                    }),
+                    pick_list(&Rating::ALL[..], state.draft.rating, |r| {
+                        Message::EditDraft(FieldEdit::Rating(Some(r)))
+                    })
+                    .placeholder("Rating (optional)"),
+                ]
                 .spacing(6)
             ]
             .max_width(600)
@@ -144,7 +148,7 @@ fn game_card(game: &GameEntry) -> Element<'_, Message> {
 
     // Empty string when unrated: on a card, missing info just isn't shown.
     let rating = if let Some(r) = game.rating {
-        format!("★ {}/10", r.value())
+        format!("{r}")
     } else {
         String::new()
     };

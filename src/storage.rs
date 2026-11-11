@@ -13,7 +13,7 @@ fn get_app_data_dir() -> Option<PathBuf> {
 }
 
 fn get_library_path() -> Option<PathBuf> {
-    let mut data_dir = get_app_data_dir()?;
+    let data_dir = get_app_data_dir()?;
     let library_path = data_dir.join("library.json");
 
     Some(library_path)

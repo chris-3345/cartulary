@@ -47,6 +47,9 @@ fn update(state: &mut AppState, message: Message) {
             FieldEdit::Status(new_status) => {
                 state.draft.status = new_status;
             }
+            FieldEdit::Rating(new_rating) => {
+                state.draft.rating = new_rating;
+            }
             _ => {
                 todo!("other fields in EditDraft")
             }
