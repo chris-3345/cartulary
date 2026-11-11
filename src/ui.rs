@@ -104,10 +104,15 @@ pub fn page_content(state: &AppState) -> Element<'_, Message> {
         Page::Create => container(
             column![
                 text("Create an entry:").font(TITLE_FONT).size(36),
-                text_input("Title", &state.draft.title)
-                    .on_input(|t| Message::EditDraft(FieldEdit::Title(t))),
+                row![
+                    text_input("Title", &state.draft.title)
+                        .on_input(|t| Message::EditDraft(FieldEdit::Title(t))),
+                    text_input("Year (e.g. '2020'; optional)", &state.draft.year)
+                        .on_input(|t| Message::EditDraft(FieldEdit::Year(t))),
+                ]
+                .spacing(6)
             ]
-            .max_width(300)
+            .max_width(600)
             .spacing(12),
         )
         .into(),

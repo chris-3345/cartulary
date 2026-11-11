@@ -38,6 +38,12 @@ fn update(state: &mut AppState, message: Message) {
             FieldEdit::Title(new_title) => {
                 state.draft.title = new_title;
             }
+            FieldEdit::Year(new_year) => {
+                // If it's not a number then ignore the message
+                if new_year.chars().all(|c| c.is_ascii_digit()) && new_year.len() <= 4 {
+                    state.draft.year = new_year;
+                }
+            }
             _ => {
                 todo!("other fields in EditDraft")
             }
