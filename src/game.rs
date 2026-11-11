@@ -40,7 +40,9 @@ pub enum Platform {
     Nintendo,
     Xbox,
     PlayStation,
-    Other(String),
+    Ios,
+    Android,
+    Other,
 }
 impl std::fmt::Display for Platform {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -49,10 +51,23 @@ impl std::fmt::Display for Platform {
             Platform::Nintendo => "Nintendo",
             Platform::Xbox => "Xbox",
             Platform::PlayStation => "PlayStation",
-            Self::Other(name) => name.as_str(),
+            Platform::Ios => "iOS",
+            Platform::Android => "Android",
+            Platform::Other => "Other",
         };
         write!(f, "{pretty_name}")
     }
+}
+impl Platform {
+    pub const ALL: [Platform; 7] = [
+        Platform::Pc,
+        Platform::Nintendo,
+        Platform::Xbox,
+        Platform::PlayStation,
+        Platform::Ios,
+        Platform::Android,
+        Platform::Other,
+    ];
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, Default)]
@@ -70,7 +85,9 @@ pub enum Store {
     Ubisoft,
     Humble,
     Physical,
-    Other(String),
+    AppleAppStore,
+    GooglePlayStore,
+    Other,
 }
 impl std::fmt::Display for Store {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -87,11 +104,32 @@ impl std::fmt::Display for Store {
             Store::Ubisoft => "Ubisoft",
             Store::Humble => "Humble",
             Store::Physical => "Physical",
-            Self::Other(name) => name.as_str(),
+            Store::AppleAppStore => "Apple App Store",
+            Store::GooglePlayStore => "Google Play Store",
+            Store::Other => "Other",
         };
 
         write!(f, "{pretty_name}")
     }
+}
+impl Store {
+    pub const ALL: [Store; 15] = [
+        Store::Steam,
+        Store::Gog,
+        Store::Epic,
+        Store::Itch,
+        Store::XboxApp,
+        Store::PlayStationStore,
+        Store::EShop,
+        Store::BattleNet,
+        Store::Ea,
+        Store::Ubisoft,
+        Store::Humble,
+        Store::AppleAppStore,
+        Store::GooglePlayStore,
+        Store::Physical,
+        Store::Other,
+    ];
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]

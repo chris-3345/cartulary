@@ -50,6 +50,9 @@ fn update(state: &mut AppState, message: Message) {
             FieldEdit::Rating(new_rating) => {
                 state.draft.rating = new_rating;
             }
+            FieldEdit::Platform(new_platform) => {
+                state.draft.platform = new_platform;
+            }
             _ => {
                 todo!("other fields in EditDraft")
             }
