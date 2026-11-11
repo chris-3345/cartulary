@@ -9,7 +9,7 @@ mod storage;
 mod ui;
 
 use iced::widget::{container, operation, row, text_editor};
-use iced::{Element, Fill, Font, Task, padding, window};
+use iced::{Element, Fill, Font, Size, Task, padding, window};
 use uuid::Uuid;
 
 use crate::constants::{APP_ID, CREDITS, ICON_FONT, TITLE_FONT};
@@ -88,8 +88,9 @@ fn update(state: &mut AppState, message: Message) -> iced::Task<Message> {
                 state.draft.date_finished = format_date_input(&new_date);
                 operation::move_cursor_to_end("date_finished")
             }
-            _ => {
-                todo!()
+            FieldEdit::Notes(action) => {
+                state.draft.notes.perform(action);
+                Task::none()
             }
         },
         Message::CreditsAction(action) => {
@@ -135,6 +136,7 @@ fn window_settings() -> window::Settings {
             application_id: APP_ID.to_string(),
             ..Default::default()
         },
+        min_size: Some(Size::new(890.0, 520.0)),
         ..Default::default()
     }
 }

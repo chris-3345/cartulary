@@ -102,46 +102,57 @@ pub fn page_content(state: &AppState) -> Element<'_, Message> {
             )
             .into()
         }
-        Page::Create => container(
-            column![
-                text("Create an entry:").font(TITLE_FONT).size(36),
-                row![
-                    text_input("Title (required)", &state.draft.title)
-                        .on_input(|t| Message::EditDraft(FieldEdit::Title(t))),
-                    text_input("Year (e.g. '2020')", &state.draft.year)
-                        .on_input(|t| Message::EditDraft(FieldEdit::Year(t))),
+        Page::Create => scrollable(
+            container(
+                column![
+                    text("Create an entry:").font(TITLE_FONT).size(36),
+                    row![
+                        text_input("Title (required)", &state.draft.title)
+                            .on_input(|t| Message::EditDraft(FieldEdit::Title(t))),
+                        text_input("Year (e.g. '2020')", &state.draft.year)
+                            .on_input(|t| Message::EditDraft(FieldEdit::Year(t))),
+                    ]
+                    .spacing(6),
+                    row![
+                        text_input("Date started (YYYY-MM-DD)", &state.draft.date_started)
+                            .id("date_started")
+                            .on_input(|t| Message::EditDraft(FieldEdit::DateStarted(t))),
+                        text_input("Date finished (YYYY-MM-DD)", &state.draft.date_finished)
+                            .id("date_finished")
+                            .on_input(|t| Message::EditDraft(FieldEdit::DateFinished(t))),
+                    ]
+                    .spacing(6),
+                    row![
+                        pick_list(&Status::ALL[..], Some(state.draft.status.clone()), |s| {
+                            Message::EditDraft(FieldEdit::Status(s))
+                        })
+                        .width(Fill),
+                        pick_list(&Rating::ALL[..], state.draft.rating, |r| {
+                            Message::EditDraft(FieldEdit::Rating(Some(r)))
+                        })
+                        .width(Fill)
+                        .placeholder("Rating"),
+                        pick_list(
+                            &Platform::ALL[..],
+                            Some(state.draft.platform.clone()),
+                            |p| { Message::EditDraft(FieldEdit::Platform(p)) }
+                        )
+                        .width(Fill),
+                        pick_list(&Store::ALL[..], Some(state.draft.store.clone()), |s| {
+                            Message::EditDraft(FieldEdit::Store(s))
+                        })
+                        .width(Fill),
+                    ]
+                    .spacing(6),
+                    text_editor(&state.draft.notes)
+                        .min_height(150)
+                        .max_height(300)
+                        .on_action(|t| Message::EditDraft(FieldEdit::Notes(t)))
                 ]
-                .spacing(6),
-                row![
-                    text_input("Date started (YYYY-MM-DD)", &state.draft.date_started)
-                        .id("date_started")
-                        .on_input(|t| Message::EditDraft(FieldEdit::DateStarted(t))),
-                    text_input("Date finished (YYYY-MM-DD)", &state.draft.date_finished)
-                        .id("date_finished")
-                        .on_input(|t| Message::EditDraft(FieldEdit::DateFinished(t))),
-                ]
-                .spacing(6),
-                row![
-                    pick_list(&Status::ALL[..], Some(state.draft.status.clone()), |s| {
-                        Message::EditDraft(FieldEdit::Status(s))
-                    }),
-                    pick_list(&Rating::ALL[..], state.draft.rating, |r| {
-                        Message::EditDraft(FieldEdit::Rating(Some(r)))
-                    })
-                    .placeholder("Rating"),
-                    pick_list(
-                        &Platform::ALL[..],
-                        Some(state.draft.platform.clone()),
-                        |p| { Message::EditDraft(FieldEdit::Platform((p))) }
-                    ),
-                    pick_list(&Store::ALL[..], Some(state.draft.store.clone()), |s| {
-                        Message::EditDraft(FieldEdit::Store(s))
-                    }),
-                ]
-                .spacing(6)
-            ]
-            .max_width(600)
-            .spacing(12),
+                .max_width(600)
+                .spacing(12),
+            )
+            .center_x(Fill),
         )
         .into(),
         Page::Detail(id) => text(format!("Detail page for ID {}", id)).into(),

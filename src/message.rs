@@ -35,7 +35,7 @@ pub enum FieldEdit {
     Year(String),
     DateStarted(String),
     DateFinished(String),
-    Notes(String),
+    Notes(text_editor::Action),
     Status(Status),
 }
 
@@ -51,7 +51,7 @@ pub struct EntryDraft {
     pub year: String,
     pub date_started: String,
     pub date_finished: String,
-    pub notes: String,
+    pub notes: text_editor::Content,
     pub status: Status,
 }
 
