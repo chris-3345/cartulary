@@ -53,6 +53,9 @@ fn update(state: &mut AppState, message: Message) {
             FieldEdit::Platform(new_platform) => {
                 state.draft.platform = new_platform;
             }
+            FieldEdit::Store(new_store) => {
+                state.draft.store = new_store;
+            }
             _ => {
                 todo!("other fields in EditDraft")
             }

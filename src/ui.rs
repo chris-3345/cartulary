@@ -1,6 +1,6 @@
 // The builders for Cartulary's sidebar and other UI.
 
-use crate::game::{Platform, Rating, Status};
+use crate::game::{Platform, Rating, Status, Store};
 use crate::{AppState, GameEntry, ICON_FONT, Message, Page, TITLE_FONT};
 use iced::widget::{
     button, column, container, mouse_area, pick_list, row, scrollable, space, svg, text,
@@ -125,6 +125,9 @@ pub fn page_content(state: &AppState) -> Element<'_, Message> {
                         Some(state.draft.platform.clone()),
                         |p| { Message::EditDraft(FieldEdit::Platform((p))) }
                     ),
+                    pick_list(&Store::ALL[..], Some(state.draft.store.clone()), |s| {
+                        Message::EditDraft(FieldEdit::Store(s))
+                    }),
                 ]
                 .spacing(6)
             ]
