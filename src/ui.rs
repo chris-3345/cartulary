@@ -1,9 +1,10 @@
 // The builders for Cartulary's sidebar and other UI.
 
+use crate::game::Status;
 use crate::{AppState, GameEntry, ICON_FONT, Message, Page, TITLE_FONT};
 use iced::widget::{
-    button, column, container, mouse_area, row, scrollable, space, svg, text, text_editor,
-    text_input,
+    button, column, container, mouse_area, pick_list, row, scrollable, space, svg, text,
+    text_editor, text_input,
 };
 use iced::{Center, Element, Fill, Font, mouse, padding};
 
@@ -110,6 +111,12 @@ pub fn page_content(state: &AppState) -> Element<'_, Message> {
                     text_input("Year (e.g. '2020'; optional)", &state.draft.year)
                         .on_input(|t| Message::EditDraft(FieldEdit::Year(t))),
                 ]
+                .spacing(6),
+                row![pick_list(
+                    &Status::ALL[..],
+                    Some(state.draft.status.clone()),
+                    |s| Message::EditDraft(FieldEdit::Status(s))
+                ),]
                 .spacing(6)
             ]
             .max_width(600)

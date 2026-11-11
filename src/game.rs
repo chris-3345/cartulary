@@ -24,6 +24,14 @@ impl std::fmt::Display for Status {
         write!(f, "{label}")
     }
 }
+impl Status {
+    pub const ALL: [Status; 4] = [
+        Status::Playing,
+        Status::Dropped,
+        Status::Backlog,
+        Status::Finished,
+    ];
+}
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, Default)]
 pub enum Platform {

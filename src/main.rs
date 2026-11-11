@@ -44,6 +44,9 @@ fn update(state: &mut AppState, message: Message) {
                     state.draft.year = new_year;
                 }
             }
+            FieldEdit::Status(new_status) => {
+                state.draft.status = new_status;
+            }
             _ => {
                 todo!("other fields in EditDraft")
             }
