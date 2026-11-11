@@ -106,10 +106,19 @@ pub fn page_content(state: &AppState) -> Element<'_, Message> {
             column![
                 text("Create an entry:").font(TITLE_FONT).size(36),
                 row![
-                    text_input("Title", &state.draft.title)
+                    text_input("Title (required)", &state.draft.title)
                         .on_input(|t| Message::EditDraft(FieldEdit::Title(t))),
-                    text_input("Year (e.g. '2020'; optional)", &state.draft.year)
+                    text_input("Year (e.g. '2020')", &state.draft.year)
                         .on_input(|t| Message::EditDraft(FieldEdit::Year(t))),
+                ]
+                .spacing(6),
+                row![
+                    text_input("Date started (YYYY-MM-DD)", &state.draft.date_started)
+                        .id("date_started")
+                        .on_input(|t| Message::EditDraft(FieldEdit::DateStarted(t))),
+                    text_input("Date finished (YYYY-MM-DD)", &state.draft.date_finished)
+                        .id("date_finished")
+                        .on_input(|t| Message::EditDraft(FieldEdit::DateFinished(t))),
                 ]
                 .spacing(6),
                 row![
@@ -119,7 +128,7 @@ pub fn page_content(state: &AppState) -> Element<'_, Message> {
                     pick_list(&Rating::ALL[..], state.draft.rating, |r| {
                         Message::EditDraft(FieldEdit::Rating(Some(r)))
                     })
-                    .placeholder("Rating (optional)"),
+                    .placeholder("Rating"),
                     pick_list(
                         &Platform::ALL[..],
                         Some(state.draft.platform.clone()),

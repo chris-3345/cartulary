@@ -8,8 +8,8 @@ mod message;
 mod storage;
 mod ui;
 
-use iced::widget::{container, row, text_editor};
-use iced::{Element, Fill, Font, padding, window};
+use iced::widget::{container, operation, row, text_editor};
+use iced::{Element, Fill, Font, Task, padding, window};
 use uuid::Uuid;
 
 use crate::constants::{APP_ID, CREDITS, ICON_FONT, TITLE_FONT};
@@ -17,47 +17,79 @@ use crate::game::{GameEntry, Platform, Rating, Status, Store};
 use crate::message::{AppState, EntryDraft, FieldEdit, Message, Page};
 use crate::ui::{page_content, sidebar};
 
+// Helper functions ==========================
+fn format_date_input(raw: &str) -> String {
+    let digits: String = raw.chars().filter(|c| c.is_ascii_digit()).take(8).collect();
+
+    let mut formatted = String::new();
+    for (i, c) in digits.chars().enumerate() {
+        if i == 4 || i == 6 {
+            formatted.push('-');
+        }
+        formatted.push(c);
+    }
+
+    formatted
+}
 // Iced update & view ==========================
 
-fn update(state: &mut AppState, message: Message) {
+fn update(state: &mut AppState, message: Message) -> iced::Task<Message> {
     match message {
         // Page-change messages
         Message::OpenDetails(id) => {
             state.page = Page::Detail(id);
+            Task::none()
         }
         Message::OpenLibrary => {
             state.page = Page::Library;
+            Task::none()
         }
         Message::OpenCreate => {
             state.page = Page::Create;
+            Task::none()
         }
         Message::OpenCredits => {
             state.page = Page::Credits;
+            Task::none()
         }
         Message::EditDraft(field_edit) => match field_edit {
             FieldEdit::Title(new_title) => {
                 state.draft.title = new_title;
+                Task::none()
             }
             FieldEdit::Year(new_year) => {
                 // If it's not a number then ignore the message
                 if new_year.chars().all(|c| c.is_ascii_digit()) && new_year.len() <= 4 {
                     state.draft.year = new_year;
                 }
+                Task::none()
             }
             FieldEdit::Status(new_status) => {
                 state.draft.status = new_status;
+                Task::none()
             }
             FieldEdit::Rating(new_rating) => {
                 state.draft.rating = new_rating;
+                Task::none()
             }
             FieldEdit::Platform(new_platform) => {
                 state.draft.platform = new_platform;
+                Task::none()
             }
             FieldEdit::Store(new_store) => {
                 state.draft.store = new_store;
+                Task::none()
+            }
+            FieldEdit::DateStarted(new_date) => {
+                state.draft.date_started = format_date_input(&new_date);
+                operation::move_cursor_to_end("date_started")
+            }
+            FieldEdit::DateFinished(new_date) => {
+                state.draft.date_finished = format_date_input(&new_date);
+                operation::move_cursor_to_end("date_finished")
             }
             _ => {
-                todo!("other fields in EditDraft")
+                todo!()
             }
         },
         Message::CreditsAction(action) => {
@@ -65,9 +97,10 @@ fn update(state: &mut AppState, message: Message) {
             if !action.is_edit() {
                 state.credits.perform(action);
             }
+            Task::none()
         }
         // See comment for this in message.rs (intentionally no-op)
-        Message::Unused => (),
+        Message::Unused => Task::none(),
 
         // Non-page messages
         Message::EditEntry(id, field_to_edit) => {
