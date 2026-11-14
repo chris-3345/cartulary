@@ -4,8 +4,9 @@ use crate::game::GameEntry;
 
 use directories::ProjectDirs;
 use std::fs::{self, File};
-use std::io::{BufWriter, Write};
-use std::path::PathBuf;
+use std::io::{BufWriter, ErrorKind, Write};
+use std::path::{Path, PathBuf};
+use uuid::Uuid;
 
 fn get_app_data_dir() -> Option<PathBuf> {
     ProjectDirs::from("io.github", "chris_3345", "Cartulary")
@@ -41,4 +42,62 @@ pub fn save_entries(entries: &[GameEntry]) -> Result<(), Box<dyn std::error::Err
     fs::rename(tmp_path, path)?;
 
     Ok(())
+}
+
+/// Loads game entries
+pub fn load_entries() -> Result<Vec<GameEntry>, Box<dyn std::error::Error>> {
+    let path = get_library_path().ok_or("couldn't find app data dir")?;
+
+    let contents = match fs::read_to_string(&path) {
+        // Read OK
+        Ok(s) => s,
+
+        // Doesn't exist; return an empty library
+        // Library will be created on first save
+        Err(e) if e.kind() == ErrorKind::NotFound => {
+            return Ok(Vec::new());
+        }
+
+        // Couldn't read
+        Err(e) => return Err(e.into()),
+    };
+
+    // Empty/whitespace only
+    if contents.trim().is_empty() {
+        return Ok(Vec::new());
+    }
+
+    match serde_json::from_str::<Vec<GameEntry>>(&contents) {
+        // Valid
+        Ok(entries) => Ok(entries),
+
+        // Not valid JSON at all
+        Err(e) if e.is_syntax() || e.is_eof() => {
+            let name = rename_bad_lib(&path)?;
+            Err(format!(
+                "library.json is malformed: {}. Renamed to {}. Reload Cartulary to start a new library, or fix the old one and rename it back to library.json.",
+                e,
+                name.display()
+            )
+            .into())
+        }
+
+        // Not valid structure
+        Err(e) => {
+            let name = rename_bad_lib(&path)?;
+            Err(format!(
+                "library.json doesn't match the expected format: {}. Renamed to {}. Reload Cartulary to start a new library, or fix the old one and rename it back to library.json.",
+                e,
+                name.display()
+            )
+            .into())
+        }
+    }
+}
+
+/// Moves a bad library.json aside so it isn't lost, returns the new filename
+fn rename_bad_lib(path: &Path) -> std::io::Result<PathBuf> {
+    let name = format!("library_BAD_{}.json", Uuid::now_v7());
+    fs::rename(path, path.with_file_name(&name))?;
+    Ok(path.with_file_name(&name))
 }

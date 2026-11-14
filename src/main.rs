@@ -14,7 +14,7 @@ use iced::{Element, Fill, Font, Size, Task, padding, window};
 use crate::constants::{APP_ID, CREDITS, ICON_FONT, TITLE_FONT};
 use crate::game::{GameEntry, Platform, Rating, Status, Store};
 use crate::message::{AppState, EntryDraft, FieldEdit, Message, Page};
-use crate::storage::save_entries;
+use crate::storage::{load_entries, save_entries};
 use crate::ui::{page_content, sidebar};
 
 // Helper functions ==========================
@@ -167,8 +167,19 @@ fn window_settings() -> window::Settings {
 }
 
 fn new() -> AppState {
+    let games = match load_entries() {
+        Ok(games) => games,
+        Err(e) => {
+            rfd::MessageDialog::new()
+                .set_level(rfd::MessageLevel::Error)
+                .set_title("Cartulary")
+                .set_description(format!("Couldn't load your library: {}", e))
+                .show();
+            std::process::exit(1);
+        }
+    };
     AppState {
-        games: Vec::new(),
+        games,
         page: Page::Library,
         credits: text_editor::Content::with_text(CREDITS),
         draft: EntryDraft::default(),

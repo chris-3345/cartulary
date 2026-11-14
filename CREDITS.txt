@@ -13,7 +13,7 @@ A full copy of this third party notices file is also included in each copy of Ca
 
 Overview
 --------
-MIT License (413)
+MIT License (418)
 Apache License 2.0 (16)
 BSD 3-Clause "New" or "Revised" License (4)
 zlib License (3)
@@ -4598,6 +4598,40 @@ MIT License
 ================================================================================
 
 Used by:
+  - pollster 1.0.1
+
+Copyright (c) 2020-2021 Joshua Barretto
+
+Permission is hereby granted, free of charge, to any
+person obtaining a copy of this software and associated
+documentation files (the "Software"), to deal in the
+Software without restriction, including without
+limitation the rights to use, copy, modify, merge,
+publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software
+is furnished to do so, subject to the following
+conditions:
+
+The above copyright notice and this permission notice
+shall be included in all copies or substantial portions
+of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF
+ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
+TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT
+SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
+IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
+
+
+================================================================================
+MIT License
+================================================================================
+
+Used by:
   - gpu-allocator 0.27.0
 
 Copyright (c) 2021 Traverse Research B.V.
@@ -5541,6 +5575,36 @@ MIT License
 ================================================================================
 
 Used by:
+  - rfd 0.18.0
+
+MIT License
+
+Copyright (c) 2020 Bilal Elmoussaoui
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+
+================================================================================
+MIT License
+================================================================================
+
+Used by:
   - cfg_aliases 0.2.2
 
 MIT License
@@ -5649,6 +5713,7 @@ MIT License
 ================================================================================
 
 Used by:
+  - rfd 0.18.0
   - sctk-adwaita 0.10.1
 
 MIT License
@@ -5899,6 +5964,7 @@ Used by:
   - block2 0.6.2
   - block 0.1.6
   - chrono 0.4.45
+  - dispatch2 0.3.1
   - dispatch 0.2.0
   - dpi 0.1.2
   - gpu-alloc-types 0.3.1
@@ -5939,6 +6005,7 @@ Used by:
   - objc2-foundation 0.3.2
   - objc2-quartz-core 0.3.2
   - objc2-ui-kit 0.2.2
+  - objc2-uniform-type-identifiers 0.3.2
   - objc2 0.5.3
   - objc2 0.6.5
   - profiling 1.0.18
