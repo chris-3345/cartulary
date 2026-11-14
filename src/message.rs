@@ -1,3 +1,4 @@
+use chrono::NaiveDate;
 use iced::widget::text_editor;
 use uuid::Uuid;
 
@@ -8,6 +9,7 @@ pub struct AppState {
     pub page: Page,
     pub credits: text_editor::Content,
     pub draft: EntryDraft,
+    pub create_error: Option<String>,
 }
 
 #[derive(Debug, Clone)]
@@ -19,6 +21,7 @@ pub enum Message {
     EditEntry(Uuid, FieldEdit),
     EditDraft(FieldEdit),
     CreditsAction(text_editor::Action),
+    CreateEntry,
 
     // INTENTIONALLY NO-OP
     // For things that need to look active but are
@@ -53,6 +56,58 @@ pub struct EntryDraft {
     pub date_finished: String,
     pub notes: text_editor::Content,
     pub status: Status,
+}
+
+impl EntryDraft {
+    pub fn to_entry(&self) -> Result<GameEntry, String> {
+        let id = Uuid::now_v7();
+        let title = self.title.trim().to_string();
+        let status = self.status;
+        let rating = self.rating;
+        let platform = self.platform;
+        let store = self.store;
+
+        let year = if self.year.is_empty() {
+            None
+        } else {
+            let parsed = self
+                .year
+                .parse::<u16>()
+                .map_err(|_| "Year is somehow not a number".to_string())?;
+            Some(parsed)
+        };
+
+        let date_started = if self.date_started.is_empty() {
+            None
+        } else {
+            let parsed = NaiveDate::parse_from_str(&self.date_started, "%Y-%m-%d")
+                .map_err(|_| "Date started is not a real date".to_string())?;
+            Some(parsed)
+        };
+
+        let date_finished = if self.date_finished.is_empty() {
+            None
+        } else {
+            let parsed = NaiveDate::parse_from_str(&self.date_finished, "%Y-%m-%d")
+                .map_err(|_| "Date finished is not a real date".to_string())?;
+            Some(parsed)
+        };
+
+        let notes = self.notes.text();
+
+        Ok(GameEntry {
+            id,
+            title,
+            status,
+            rating,
+            platform,
+            store,
+            year,
+            date_started,
+            date_finished,
+            notes,
+        })
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq)]

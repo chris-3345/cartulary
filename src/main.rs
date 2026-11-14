@@ -10,11 +10,11 @@ mod ui;
 
 use iced::widget::{container, operation, row, text_editor};
 use iced::{Element, Fill, Font, Size, Task, padding, window};
-use uuid::Uuid;
 
 use crate::constants::{APP_ID, CREDITS, ICON_FONT, TITLE_FONT};
 use crate::game::{GameEntry, Platform, Rating, Status, Store};
 use crate::message::{AppState, EntryDraft, FieldEdit, Message, Page};
+use crate::storage::save_entries;
 use crate::ui::{page_content, sidebar};
 
 // Helper functions ==========================
@@ -52,6 +52,8 @@ fn update(state: &mut AppState, message: Message) -> iced::Task<Message> {
             state.page = Page::Credits;
             Task::none()
         }
+
+        // Edit/create messages
         Message::EditDraft(field_edit) => match field_edit {
             FieldEdit::Title(new_title) => {
                 state.draft.title = new_title;
@@ -93,6 +95,34 @@ fn update(state: &mut AppState, message: Message) -> iced::Task<Message> {
                 Task::none()
             }
         },
+        Message::EditEntry(id, field_to_edit) => {
+            todo!()
+        }
+        Message::CreateEntry => {
+            match state.draft.to_entry() {
+                Ok(entry) => {
+                    state.games.push(entry);
+                    match save_entries(&state.games) {
+                        Ok(()) => {
+                            state.draft = EntryDraft::default();
+                            state.page = Page::Library;
+                            state.create_error = None;
+                        }
+                        Err(e) => {
+                            state.games.pop();
+                            state.create_error = Some(format!("Couldn't save: {}", e));
+                        }
+                    }
+                }
+                Err(msg) => {
+                    state.create_error = Some(format!("Couldn't save: {}", msg));
+                }
+            }
+
+            Task::none()
+        }
+
+        // No-op-ish messages
         Message::CreditsAction(action) => {
             // Allow selecting scrolling and copying but block typing/deleting
             if !action.is_edit() {
@@ -102,11 +132,6 @@ fn update(state: &mut AppState, message: Message) -> iced::Task<Message> {
         }
         // See comment for this in message.rs (intentionally no-op)
         Message::Unused => Task::none(),
-
-        // Non-page messages
-        Message::EditEntry(id, field_to_edit) => {
-            todo!()
-        }
     }
 }
 
@@ -147,6 +172,7 @@ fn new() -> AppState {
         page: Page::Library,
         credits: text_editor::Content::with_text(CREDITS),
         draft: EntryDraft::default(),
+        create_error: None,
     }
 }
 

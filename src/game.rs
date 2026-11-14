@@ -5,7 +5,7 @@ use chrono::NaiveDate;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, Default)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, Copy, Default)]
 pub enum Status {
     #[default]
     Playing,
@@ -33,7 +33,7 @@ impl Status {
     ];
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, Default)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, Copy, Default)]
 pub enum Platform {
     #[default]
     Pc,
@@ -70,7 +70,7 @@ impl Platform {
     ];
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, Default)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Copy, Deserialize, Default)]
 pub enum Store {
     #[default]
     Steam,
