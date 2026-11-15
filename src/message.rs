@@ -10,6 +10,8 @@ pub struct AppState {
     pub credits: text_editor::Content,
     pub draft: EntryDraft,
     pub create_error: Option<String>,
+    pub edit_draft: EntryDraft,
+    pub edit_error: Option<String>,
 }
 
 #[derive(Debug, Clone)]
@@ -18,7 +20,9 @@ pub enum Message {
     OpenLibrary,
     OpenCreate,
     OpenCredits,
-    EditEntry(Uuid, FieldEdit),
+    EditDetail(FieldEdit),
+    SaveEdit(Uuid),
+    RevertEdit(Uuid),
     EditDraft(FieldEdit),
     CreditsAction(text_editor::Action),
     CreateEntry,
@@ -109,6 +113,23 @@ impl EntryDraft {
             date_finished,
             notes,
         })
+    }
+
+    pub fn from_entry(game: &GameEntry) -> EntryDraft {
+        EntryDraft {
+            title: game.title.clone(),
+            platform: game.platform,
+            store: game.store,
+            status: game.status,
+            rating: game.rating,
+            year: game.year.map(|y| y.to_string()).unwrap_or_default(),
+            date_started: game.date_started.map(|d| d.to_string()).unwrap_or_default(),
+            date_finished: game
+                .date_finished
+                .map(|d| d.to_string())
+                .unwrap_or_default(),
+            notes: text_editor::Content::with_text(&game.notes),
+        }
     }
 }
 

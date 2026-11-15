@@ -18,6 +18,8 @@ use crate::storage::{load_entries, save_entries};
 use crate::ui::{page_content, sidebar};
 
 // Helper functions ==========================
+
+/// Formats a String like 20260408 into 2026-04-08
 fn format_date_input(raw: &str) -> String {
     let digits: String = raw.chars().filter(|c| c.is_ascii_digit()).take(8).collect();
 
@@ -31,12 +33,63 @@ fn format_date_input(raw: &str) -> String {
 
     formatted
 }
+
+/// Applies a single field edit to a draft (used by both Create and Edit pages).
+fn apply_edit(draft: &mut EntryDraft, field_edit: FieldEdit) -> Task<Message> {
+    match field_edit {
+        FieldEdit::Title(new_title) => {
+            draft.title = new_title;
+            Task::none()
+        }
+        FieldEdit::Year(new_year) => {
+            // If it's not a number then ignore the message
+            if new_year.chars().all(|c| c.is_ascii_digit()) && new_year.len() <= 4 {
+                draft.year = new_year;
+            }
+            Task::none()
+        }
+        FieldEdit::Status(new_status) => {
+            draft.status = new_status;
+            Task::none()
+        }
+        FieldEdit::Rating(new_rating) => {
+            draft.rating = new_rating;
+            Task::none()
+        }
+        FieldEdit::Platform(new_platform) => {
+            draft.platform = new_platform;
+            Task::none()
+        }
+        FieldEdit::Store(new_store) => {
+            draft.store = new_store;
+            Task::none()
+        }
+        FieldEdit::DateStarted(new_date) => {
+            draft.date_started = format_date_input(&new_date);
+            operation::move_cursor_to_end("date_started")
+        }
+        FieldEdit::DateFinished(new_date) => {
+            draft.date_finished = format_date_input(&new_date);
+            operation::move_cursor_to_end("date_finished")
+        }
+        FieldEdit::Notes(action) => {
+            draft.notes.perform(action);
+            Task::none()
+        }
+    }
+}
+
 // Iced update & view ==========================
 
 fn update(state: &mut AppState, message: Message) -> iced::Task<Message> {
     match message {
         // Page-change messages
         Message::OpenDetails(id) => {
+            let Some(game) = state.games.iter().find(|g| g.id == id) else {
+                return Task::none();
+            };
+            state.edit_draft = EntryDraft::from_entry(game);
+            state.edit_error = None;
             state.page = Page::Detail(id);
             Task::none()
         }
@@ -52,51 +105,53 @@ fn update(state: &mut AppState, message: Message) -> iced::Task<Message> {
             state.page = Page::Credits;
             Task::none()
         }
+        Message::OpenDetails(id) => {
+            if let Some(game) = state.games.iter().find(|g| g.id == id) {
+                state.edit_draft = EntryDraft::from_entry(game);
+            }
+            state.edit_error = None;
+            state.page = Page::Detail(id);
+            Task::none()
+        }
 
         // Edit/create/delete messages
-        Message::EditDraft(field_edit) => match field_edit {
-            FieldEdit::Title(new_title) => {
-                state.draft.title = new_title;
-                Task::none()
-            }
-            FieldEdit::Year(new_year) => {
-                // If it's not a number then ignore the message
-                if new_year.chars().all(|c| c.is_ascii_digit()) && new_year.len() <= 4 {
-                    state.draft.year = new_year;
+        Message::EditDraft(edit) => apply_edit(&mut state.draft, edit),
+        Message::EditDetail(edit) => apply_edit(&mut state.draft, edit),
+        Message::SaveEdit(id) => {
+            // Build updated entry
+            let mut updated = match state.edit_draft.to_entry() {
+                Ok(entry) => entry,
+                Err(msg) => {
+                    state.edit_error = Some(msg);
+                    return Task::none();
                 }
-                Task::none()
+            };
+            updated.id = id; // keep the original UUID
+
+            // Find game in the vec
+            let Some(index) = state.games.iter().position(|g| g.id == id) else {
+                return Task::none();
+            };
+
+            // Swap in the new one but keep the old one in case the saving fales
+            let old = std::mem::replace(&mut state.games[index], updated);
+
+            match save_entries(&state.games) {
+                Ok(()) => state.edit_error = None,
+                Err(e) => {
+                    state.games[index] = old;
+                    state.edit_error = Some(format!("Couldn't save: {e}"));
+                }
             }
-            FieldEdit::Status(new_status) => {
-                state.draft.status = new_status;
-                Task::none()
+
+            Task::none()
+        }
+        Message::RevertEdit(id) => {
+            if let Some(game) = state.games.iter().find(|g| g.id == id) {
+                state.edit_draft = EntryDraft::from_entry(game);
             }
-            FieldEdit::Rating(new_rating) => {
-                state.draft.rating = new_rating;
-                Task::none()
-            }
-            FieldEdit::Platform(new_platform) => {
-                state.draft.platform = new_platform;
-                Task::none()
-            }
-            FieldEdit::Store(new_store) => {
-                state.draft.store = new_store;
-                Task::none()
-            }
-            FieldEdit::DateStarted(new_date) => {
-                state.draft.date_started = format_date_input(&new_date);
-                operation::move_cursor_to_end("date_started")
-            }
-            FieldEdit::DateFinished(new_date) => {
-                state.draft.date_finished = format_date_input(&new_date);
-                operation::move_cursor_to_end("date_finished")
-            }
-            FieldEdit::Notes(action) => {
-                state.draft.notes.perform(action);
-                Task::none()
-            }
-        },
-        Message::EditEntry(id, field_to_edit) => {
-            todo!()
+            state.edit_error = None;
+            Task::none()
         }
         Message::CreateEntry => {
             match state.draft.to_entry() {

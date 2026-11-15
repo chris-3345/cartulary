@@ -255,6 +255,9 @@ fn create_button(state: &AppState) -> Element<'_, Message> {
     .into()
 }
 
+/// Edit page
+fn edit_page(state: &AppState) -> Element<'_, Message> {}
+
 /// Builds a game card UI element from a GameEntry struct
 fn game_card(game: &GameEntry) -> Element<'_, Message> {
     // Prepare the text first, then build the UI.
