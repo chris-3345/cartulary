@@ -3,10 +3,28 @@
 use crate::game::GameEntry;
 
 use directories::ProjectDirs;
+use serde::{Deserialize, Serialize};
 use std::fs::{self, File};
 use std::io::{BufWriter, ErrorKind, Write};
 use std::path::{Path, PathBuf};
 use uuid::Uuid;
+
+/// Save format version
+const FORMAT_VERSION: u32 = 1;
+
+/// What's written (borrows so don't need to copy)
+#[derive(Serialize)]
+struct LibraryFileOut<'a> {
+    format_version: u32,
+    games: &'a [GameEntry],
+}
+
+/// What's read (games become app state so we own)
+#[derive(Deserialize)]
+struct LibraryFileIn {
+    format_version: u32,
+    games: Vec<GameEntry>,
+}
 
 fn get_app_data_dir() -> Option<PathBuf> {
     ProjectDirs::from("io.github", "chris_3345", "Cartulary")
@@ -33,7 +51,11 @@ pub fn save_entries(entries: &[GameEntry]) -> Result<(), Box<dyn std::error::Err
     {
         let file = File::create(&tmp_path)?;
         let mut writer = BufWriter::new(&file);
-        serde_json::to_writer_pretty(&mut writer, entries)?;
+        let file_data = LibraryFileOut {
+            format_version: FORMAT_VERSION,
+            games: entries,
+        };
+        serde_json::to_writer_pretty(&mut writer, &file_data)?;
         writer.flush()?;
         file.sync_all()?;
     }
@@ -67,9 +89,14 @@ pub fn load_entries() -> Result<Vec<GameEntry>, Box<dyn std::error::Error>> {
         return Ok(Vec::new());
     }
 
-    match serde_json::from_str::<Vec<GameEntry>>(&contents) {
-        // Valid
-        Ok(entries) => Ok(entries),
+    match serde_json::from_str::<LibraryFileIn>(&contents) {
+        Ok(file) if file.format_version > FORMAT_VERSION => Err(format!(
+            "library.json was saved by a newer version of Cartulary (format {}, this version understands up to {}). Update Cartulary to open it.",
+            file.format_version, FORMAT_VERSION
+        )
+        .into()),
+
+        Ok(file) => Ok(file.games),
 
         // Not valid JSON at all
         Err(e) if e.is_syntax() || e.is_eof() => {

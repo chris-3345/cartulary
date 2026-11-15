@@ -1,0 +1,44 @@
+name: Release builds
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write   # needed to upload files to the release
+
+jobs:
+  package:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            format: nsis
+            files: dist/*.exe
+          - os: macos-latest
+            format: dmg
+            files: dist/*.dmg
+          - os: ubuntu-latest
+            format: appimage
+            files: dist/*.AppImage
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v5
+      - name: Linux packaging deps
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y libfuse2t64
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Install cargo-packager
+        run: cargo install cargo-packager --locked
+
+      - name: Package
+        run: cargo packager --release --formats ${{ matrix.format }}
+
+      - name: Upload to release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "${{ github.event.release.tag_name }}" ${{ matrix.files }} --clobber

@@ -8,10 +8,13 @@ mod message;
 mod storage;
 mod ui;
 
-use iced::widget::{container, operation, row, text, text_editor};
+use iced::widget::{container, operation, row, text_editor};
 use iced::{Element, Fill, Font, Size, Task, padding, window};
 
-use crate::constants::{APP_ID, CREDITS, ICON_FONT, TITLE_FONT};
+#[cfg(target_os = "linux")]
+use crate::constants::APP_ID;
+
+use crate::constants::{CREDITS, ICON_FONT, TITLE_FONT};
 use crate::game::{GameEntry, Platform, Rating, Status, Store};
 use crate::message::{AppState, EntryDraft, FieldEdit, Message, Page};
 use crate::storage::{load_entries, save_entries};

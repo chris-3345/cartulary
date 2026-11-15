@@ -16,3 +16,14 @@ uuid = { version = "1.29.0", features = ["serde", "v7"] }
 
 [build-dependencies]
 winresource = "0.1.34"
+
+[package.metadata.packager]
+product-name = "Cartulary"
+identifier = "io.github.chris_3345.Cartulary"
+before-packaging-command = "cargo build --release"
+out-dir = "dist"
+icons = [
+    "media/Icons/windows/cartulary.ico",
+    "media/Icons/macos/cartulary.icns",
+    "media/Icons/linux/hicolor/*/apps/*.png",
+]

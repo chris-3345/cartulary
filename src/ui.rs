@@ -7,7 +7,6 @@ use iced::widget::{
     text_editor, text_input,
 };
 use iced::{Center, Element, Fill, Font, mouse, padding};
-use uuid::Uuid;
 
 use crate::constants::WORDMARK;
 use crate::message::FieldEdit;

@@ -133,6 +133,7 @@ impl Store {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
+#[serde(try_from = "u8", into = "u8")]
 pub struct Rating(u8);
 
 impl Rating {
@@ -160,6 +161,20 @@ impl Rating {
         Rating(9),
         Rating(10),
     ];
+}
+
+impl TryFrom<u8> for Rating {
+    type Error = String;
+
+    fn try_from(value: u8) -> Result<Self, Self::Error> {
+        Rating::new(value).ok_or_else(|| format!("rating must be 1–10, got {value}"))
+    }
+}
+
+impl From<Rating> for u8 {
+    fn from(rating: Rating) -> u8 {
+        rating.value()
+    }
 }
 
 impl std::fmt::Display for Rating {

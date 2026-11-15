@@ -16,4 +16,5 @@ pub const WORDMARK: &[u8] =
 
 pub const ICON_SVG: &[u8] = include_bytes!("../media/Icons/Cartulary-logo.svg");
 
+#[cfg(target_os = "linux")]
 pub const APP_ID: &str = "io.github.chris_3345.Cartulary";
