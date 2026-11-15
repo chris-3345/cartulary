@@ -26,7 +26,7 @@ Cartulary keeps track of the games you're playing, have finished, or want to pla
 - **Library:** all your games as cards, showing platform, store, status, and rating (wowie!)
 - **Entries:** title, year, platform, store, status, a half-star rating out of 5, start/finish dates, and free-form notes (I know it's amazing)
 - **Inline editing:** open any game to edit it, then save or revert your changes
-- **Offline by design:** no accounts, no sync, no telemetry because I'm too lazy to do that and don't have servers :)
+- **Offline by design:** no accounts, no sync, and no telemetry because I'm too lazy to do that and don't have servers :)
 
 > [!NOTE]
 > Cartulary is early software (0.x). It works, I think. Just back up your library.
