@@ -7,6 +7,7 @@ use iced::widget::{
     text_editor, text_input,
 };
 use iced::{Center, Element, Fill, Font, mouse, padding};
+use uuid::Uuid;
 
 use crate::constants::WORDMARK;
 use crate::message::FieldEdit;
@@ -103,7 +104,7 @@ pub fn page_content(state: &AppState) -> Element<'_, Message> {
             .into()
         }
         Page::Create => create_page(&state),
-        Page::Detail(id) => text(format!("Detail page for ID {}", id)).into(),
+        Page::Detail(id) => detail_page(state, id),
         Page::Credits => text_editor(&state.credits)
             .on_action(Message::CreditsAction)
             .font(Font::MONOSPACE)
@@ -111,6 +112,68 @@ pub fn page_content(state: &AppState) -> Element<'_, Message> {
             .height(Fill)
             .into(),
     }
+}
+
+/// Details page builder
+fn detail_page(state: &AppState, id: uuid::Uuid) -> Element<'_, Message> {
+    let Some(game) = state.games.iter().find(|g| g.id == id) else {
+        return text("Game not found.").into();
+    };
+
+    let or_dash = |v: Option<String>| v.unwrap_or_else(|| "—".to_string());
+
+    let title = if let Some(y) = game.year {
+        format!("{} ({})", game.title, y)
+    } else {
+        game.title.clone()
+    };
+
+    let notes = if game.notes.trim().is_empty() {
+        "No notes"
+    } else {
+        &game.notes
+    };
+
+    let info = container(
+        column![
+            field_row("Status", game.status.to_string()),
+            field_row("Rating", or_dash(game.rating.map(|r| r.to_string()))),
+            field_row("Platform", game.platform.to_string()),
+            field_row("Store", game.store.to_string()),
+            field_row("Started", or_dash(game.date_started.map(|d| d.to_string()))),
+            field_row(
+                "Finished",
+                or_dash(game.date_finished.map(|d| d.to_string()))
+            ),
+        ]
+        .spacing(6),
+    )
+    .padding(12)
+    .width(Fill)
+    .style(container::rounded_box);
+
+    scrollable(
+        container(
+            column![
+                text(title).font(TITLE_FONT).size(44),
+                info,
+                text("Notes").style(text::secondary),
+                container(text(notes))
+                    .padding(12)
+                    .width(Fill)
+                    .style(container::rounded_box),
+            ]
+            .max_width(600)
+            .spacing(12),
+        )
+        .center_x(Fill),
+    )
+    .into()
+}
+
+/// One "Label    value" line on the Details page.
+fn field_row<'a>(label: &'a str, value: String) -> Element<'a, Message> {
+    row![text(label).style(text::secondary).width(120), text(value),].into()
 }
 
 /// The Create page
@@ -136,7 +199,7 @@ fn create_page(state: &AppState) -> Element<'_, Message> {
                 ]
                 .spacing(6),
                 row![
-                    pick_list(&Status::ALL[..], Some(state.draft.status.clone()), |s| {
+                    pick_list(&Status::ALL[..], Some(state.draft.status), |s| {
                         Message::EditDraft(FieldEdit::Status(s))
                     })
                     .width(Fill),
@@ -145,13 +208,11 @@ fn create_page(state: &AppState) -> Element<'_, Message> {
                     })
                     .width(Fill)
                     .placeholder("Rating"),
-                    pick_list(
-                        &Platform::ALL[..],
-                        Some(state.draft.platform.clone()),
-                        |p| { Message::EditDraft(FieldEdit::Platform(p)) }
-                    )
+                    pick_list(&Platform::ALL[..], Some(state.draft.platform), |p| {
+                        Message::EditDraft(FieldEdit::Platform(p))
+                    })
                     .width(Fill),
-                    pick_list(&Store::ALL[..], Some(state.draft.store.clone()), |s| {
+                    pick_list(&Store::ALL[..], Some(state.draft.store), |s| {
                         Message::EditDraft(FieldEdit::Store(s))
                     })
                     .width(Fill),
