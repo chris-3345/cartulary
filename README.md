@@ -86,7 +86,9 @@ Built with [Rust](https://www.rust-lang.org) and [Iced](https://iced.rs).
 
 ## Roadmap/To do
 [ ] Fix icon being cut off on macOS
-[ ] Add library export/import
+[ ] Add library export/import and sorting (alphabetical)
+[ ] Add Settings page with theme changer
+[ ] Import game artwork (user upload or from API)
 
 ## License
 
