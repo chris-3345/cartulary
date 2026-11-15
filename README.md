@@ -44,7 +44,8 @@ Grab the latest build from the [Releases page](https://github.com/chris-3345/car
 The builds aren't signed so your OS will warn you the first time:
 
 - **Windows:** SmartScreen says "Windows protected your PC". Click **More info → Run anyway**.
-- **macOS:** the app is blocked on first launch. Right-click it → **Open**, or allow it in **System Settings → Privacy & Security**.
+- **macOS:** the app is blocked completely until you run a terminal command (you'll get a warning about the app being "damaged"). Open your terminal and run:
+`xattr -dr com.apple.quarantine /Applications/Cartulary.app`
 - **Linux:** mark the AppImage as executable (`chmod +x Cartulary*.AppImage`) and run it.
 
 ## Data storage
@@ -82,6 +83,10 @@ Output goes to `dist/`. Release builds for all three platforms are also built au
 
 Built with [Rust](https://www.rust-lang.org) and [Iced](https://iced.rs).
 (👁️❤️🦀🧊)
+
+## Roadmap/To do
+[ ] Fix icon being cut off on macOS
+[ ] Add library export/import
 
 ## License
 
