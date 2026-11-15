@@ -1,0 +1,54 @@
+name: Licensing issue
+description: A dependency, font, or asset is missing from the credits, or its license is shown incorrectly
+labels: ["licensing"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This is a priority issue; thank you for bringing it to our attention.
+
+        Third-party notices live in [`CREDITS.txt`](https://github.com/chris-3345/cartulary/blob/main/CREDITS.txt) and in the app under **Third Party Licenses**.
+
+  - type: input
+    id: component
+    attributes:
+      label: Crate, font, or asset
+      description: Name (and version, if relevant) of the affected component.
+      placeholder: e.g. some-crate 1.2.3
+    validations:
+      required: true
+
+  - type: dropdown
+    id: problem
+    attributes:
+      label: What's wrong?
+      options:
+        - It's missing from the credits entirely
+        - The license shown is wrong or out of date
+        - The copyright notice or attribution is wrong
+        - Something else
+    validations:
+      required: true
+
+  - type: input
+    id: license
+    attributes:
+      label: Correct license
+      description: The license that should apply, ideally as an SPDX identifier.
+      placeholder: e.g. MIT OR Apache-2.0
+
+  - type: dropdown
+    id: relationship
+    attributes:
+      label: Your relationship to the component
+      options:
+        - I'm a maintainer or author
+        - I'm a user who noticed this
+    validations:
+      required: true
+
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+      description: Anything else we should know, such as links to the license file or the exact attribution text you'd like.
