@@ -105,18 +105,9 @@ fn update(state: &mut AppState, message: Message) -> iced::Task<Message> {
             state.page = Page::Credits;
             Task::none()
         }
-        Message::OpenDetails(id) => {
-            if let Some(game) = state.games.iter().find(|g| g.id == id) {
-                state.edit_draft = EntryDraft::from_entry(game);
-            }
-            state.edit_error = None;
-            state.page = Page::Detail(id);
-            Task::none()
-        }
-
         // Edit/create/delete messages
         Message::EditDraft(edit) => apply_edit(&mut state.draft, edit),
-        Message::EditDetail(edit) => apply_edit(&mut state.draft, edit),
+        Message::EditDetail(edit) => apply_edit(&mut state.edit_draft, edit),
         Message::SaveEdit(id) => {
             // Build updated entry
             let mut updated = match state.edit_draft.to_entry() {
@@ -285,6 +276,8 @@ fn new() -> AppState {
         credits: text_editor::Content::with_text(CREDITS),
         draft: EntryDraft::default(),
         create_error: None,
+        edit_draft: EntryDraft::default(),
+        edit_error: None,
     }
 }
 

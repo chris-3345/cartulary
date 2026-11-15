@@ -104,7 +104,7 @@ pub fn page_content(state: &AppState) -> Element<'_, Message> {
             .into()
         }
         Page::Create => create_page(&state),
-        Page::Detail(id) => detail_page(state, id),
+        Page::Detail(id) => edit_page(state, id),
         Page::Credits => text_editor(&state.credits)
             .on_action(Message::CreditsAction)
             .font(Font::MONOSPACE)
@@ -114,71 +114,7 @@ pub fn page_content(state: &AppState) -> Element<'_, Message> {
     }
 }
 
-/// Details page builder
-fn detail_page(state: &AppState, id: uuid::Uuid) -> Element<'_, Message> {
-    let Some(game) = state.games.iter().find(|g| g.id == id) else {
-        return text("Game not found.").into();
-    };
-
-    let or_dash = |v: Option<String>| v.unwrap_or_else(|| "—".to_string());
-
-    let title = if let Some(y) = game.year {
-        format!("{} ({})", game.title, y)
-    } else {
-        game.title.clone()
-    };
-
-    let notes = if game.notes.trim().is_empty() {
-        "No notes"
-    } else {
-        &game.notes
-    };
-
-    let info = container(
-        column![
-            field_row("Status", game.status.to_string()),
-            field_row("Rating", or_dash(game.rating.map(|r| r.to_string()))),
-            field_row("Platform", game.platform.to_string()),
-            field_row("Store", game.store.to_string()),
-            field_row("Started", or_dash(game.date_started.map(|d| d.to_string()))),
-            field_row(
-                "Finished",
-                or_dash(game.date_finished.map(|d| d.to_string()))
-            ),
-        ]
-        .spacing(6),
-    )
-    .padding(12)
-    .width(Fill)
-    .style(container::rounded_box);
-
-    scrollable(
-        container(
-            column![
-                text(title).font(TITLE_FONT).size(44),
-                info,
-                text("Notes").style(text::secondary),
-                container(text(notes))
-                    .padding(12)
-                    .width(Fill)
-                    .style(container::rounded_box),
-                button("Delete entry")
-                    .style(button::danger)
-                    .on_press(Message::DeleteEntry(id)),
-            ]
-            .max_width(600)
-            .spacing(12),
-        )
-        .center_x(Fill),
-    )
-    .into()
-}
-
-/// One "Label    value" line on the Details page.
-fn field_row<'a>(label: &'a str, value: String) -> Element<'a, Message> {
-    row![text(label).style(text::secondary).width(120), text(value),].into()
-}
-
+// ======== CREATE PAGE ========
 /// The Create page
 fn create_page(state: &AppState) -> Element<'_, Message> {
     scrollable(
@@ -206,11 +142,9 @@ fn create_page(state: &AppState) -> Element<'_, Message> {
                         Message::EditDraft(FieldEdit::Status(s))
                     })
                     .width(Fill),
-                    pick_list(&Rating::ALL[..], state.draft.rating, |r| {
-                        Message::EditDraft(FieldEdit::Rating(Some(r)))
-                    })
-                    .width(Fill)
-                    .placeholder("Rating"),
+                    rating_picker(state.draft.rating, |r| Message::EditDraft(
+                        FieldEdit::Rating(r)
+                    )),
                     pick_list(&Platform::ALL[..], Some(state.draft.platform), |p| {
                         Message::EditDraft(FieldEdit::Platform(p))
                     })
@@ -255,9 +189,125 @@ fn create_button(state: &AppState) -> Element<'_, Message> {
     .into()
 }
 
-/// Edit page
-fn edit_page(state: &AppState) -> Element<'_, Message> {}
+// ======== SHARED HELPER FUNCTIONS ========
+/// Rating pick_list with a ✕ button to clear it back to "no rating".
+fn rating_picker<'a>(
+    current: Option<Rating>,
+    on_change: impl Fn(Option<Rating>) -> Message + 'a,
+) -> Element<'a, Message> {
+    let clear_msg = on_change(None);
 
+    let clear = button(text("✕")).style(button::secondary);
+    let clear = if current.is_some() {
+        clear.on_press(clear_msg)
+    } else {
+        clear
+    };
+
+    row![
+        pick_list(&Rating::ALL[..], current, move |r| on_change(Some(r)))
+            .width(Fill)
+            .placeholder("Rating"),
+        clear,
+    ]
+    .spacing(4)
+    .width(Fill)
+    .into()
+}
+
+// ======== EDIT PAGE ========
+/// Helper function for the edit page's buttons (save/revert/delete + save error)
+fn edit_buttons(state: &AppState, id: uuid::Uuid) -> Element<'_, Message> {
+    let save = button(text("Save"));
+    let save = if state.edit_draft.title.trim().is_empty() {
+        save
+    } else {
+        save.on_press(Message::SaveEdit(id))
+    };
+
+    column![
+        row![
+            save,
+            button(text("Revert"))
+                .style(button::secondary)
+                .on_press(Message::RevertEdit(id)),
+            space::horizontal(),
+            button(text("Delete"))
+                .style(button::danger)
+                .on_press(Message::DeleteEntry(id)),
+        ]
+        .spacing(8),
+        if let Some(err) = &state.edit_error {
+            Some(text(err).style(text::danger))
+        } else {
+            None
+        },
+    ]
+    .spacing(4)
+    .into()
+}
+
+/// Edit page builder
+fn edit_page(state: &AppState, id: uuid::Uuid) -> Element<'_, Message> {
+    let Some(game) = state.games.iter().find(|g| g.id == id) else {
+        return text("Game not found").into();
+    };
+    let draft = &state.edit_draft;
+
+    scrollable(
+        container(
+            column![
+                // Heading uses the saved title so it doesn't change while typing
+                text(&game.title).font(TITLE_FONT).size(44),
+                row![
+                    text_input("Title (required)", &draft.title)
+                        .on_input(|t| Message::EditDetail(FieldEdit::Title(t))),
+                    text_input("Year (e.g. '2020')", &draft.year)
+                        .on_input(|t| Message::EditDetail(FieldEdit::Year(t))),
+                ]
+                .spacing(6),
+                row![
+                    text_input("Date started (YYYY-MM-DD)", &draft.date_started)
+                        .id("date_started")
+                        .on_input(|t| Message::EditDetail(FieldEdit::DateStarted(t))),
+                    text_input("Date finished (YYYY-MM-DD)", &draft.date_finished)
+                        .id("date_finished")
+                        .on_input(|t| Message::EditDetail(FieldEdit::DateFinished(t))),
+                ]
+                .spacing(6),
+                row![
+                    pick_list(&Status::ALL[..], Some(draft.status), |s| {
+                        Message::EditDetail(FieldEdit::Status(s))
+                    })
+                    .width(Fill),
+                    rating_picker(state.draft.rating, |r| Message::EditDraft(
+                        FieldEdit::Rating(r)
+                    )),
+                    pick_list(&Platform::ALL[..], Some(draft.platform), |p| {
+                        Message::EditDetail(FieldEdit::Platform(p))
+                    })
+                    .width(Fill),
+                    pick_list(&Store::ALL[..], Some(draft.store), |s| {
+                        Message::EditDetail(FieldEdit::Store(s))
+                    })
+                    .width(Fill),
+                ]
+                .spacing(6),
+                text_editor(&draft.notes)
+                    .min_height(150)
+                    .max_height(300)
+                    .on_action(|t| Message::EditDetail(FieldEdit::Notes(t))),
+                edit_buttons(state, id),
+            ]
+            .max_width(600)
+            .spacing(12),
+        )
+        .center_x(Fill),
+    )
+    .into()
+}
+
+// ======== GAME CARD ========
 /// Builds a game card UI element from a GameEntry struct
 fn game_card(game: &GameEntry) -> Element<'_, Message> {
     // Prepare the text first, then build the UI.
