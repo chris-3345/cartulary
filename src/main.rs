@@ -8,7 +8,7 @@ mod message;
 mod storage;
 mod ui;
 
-use iced::widget::{container, operation, row, text_editor};
+use iced::widget::{container, operation, row, text, text_editor};
 use iced::{Element, Fill, Font, Size, Task, padding, window};
 
 use crate::constants::{APP_ID, CREDITS, ICON_FONT, TITLE_FONT};
@@ -53,7 +53,7 @@ fn update(state: &mut AppState, message: Message) -> iced::Task<Message> {
             Task::none()
         }
 
-        // Edit/create messages
+        // Edit/create/delete messages
         Message::EditDraft(field_edit) => match field_edit {
             FieldEdit::Title(new_title) => {
                 state.draft.title = new_title;
@@ -116,6 +116,52 @@ fn update(state: &mut AppState, message: Message) -> iced::Task<Message> {
                 }
                 Err(msg) => {
                     state.create_error = Some(format!("Couldn't save: {}", msg));
+                }
+            }
+
+            Task::none()
+        }
+        Message::DeleteEntry(id) => {
+            let Some(game) = state.games.iter().find(|g| g.id == id) else {
+                return Task::none();
+            };
+
+            let dialog = rfd::AsyncMessageDialog::new()
+                .set_level(rfd::MessageLevel::Warning)
+                .set_title("Delete entry?")
+                .set_description(format!("Delete \"{}\"? This can't be undone.", game.title))
+                .set_buttons(rfd::MessageButtons::YesNo)
+                .show();
+
+            Task::perform(dialog, move |answer| {
+                if answer == rfd::MessageDialogResult::Yes {
+                    Message::ConfirmDelete(id)
+                } else {
+                    Message::Unused
+                }
+            })
+        }
+        Message::ConfirmDelete(id) => {
+            // Get the index of the game
+            let Some(index) = state.games.iter().position(|g| g.id == id) else {
+                return Task::none(); // already gone somehow
+            };
+
+            // Keep it as a variable in case saving fails
+            let entry = state.games.remove(index);
+
+            match save_entries(&state.games) {
+                Ok(()) => state.page = Page::Library,
+                Err(e) => {
+                    state.games.insert(index, entry);
+                    return Task::perform(
+                        rfd::AsyncMessageDialog::new()
+                            .set_level(rfd::MessageLevel::Error)
+                            .set_title("Couldn't delete")
+                            .set_description(format!("Couldn't save: {e}"))
+                            .show(),
+                        |_| Message::Unused,
+                    );
                 }
             }
 

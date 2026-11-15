@@ -162,6 +162,9 @@ fn detail_page(state: &AppState, id: uuid::Uuid) -> Element<'_, Message> {
                     .padding(12)
                     .width(Fill)
                     .style(container::rounded_box),
+                button("Delete entry")
+                    .style(button::danger)
+                    .on_press(Message::DeleteEntry(id)),
             ]
             .max_width(600)
             .spacing(12),

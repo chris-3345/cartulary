@@ -22,6 +22,8 @@ pub enum Message {
     EditDraft(FieldEdit),
     CreditsAction(text_editor::Action),
     CreateEntry,
+    DeleteEntry(Uuid),
+    ConfirmDelete(Uuid),
 
     // INTENTIONALLY NO-OP
     // For things that need to look active but are
