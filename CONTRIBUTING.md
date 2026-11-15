@@ -47,7 +47,8 @@ to make sure there are no new warnings. Some code only exists on certain platfor
 | `src/constants.rs` | Fonts, wordmark, credits text, app ID |
 
 ## Be careful
-<small>(otherwise people will open a ton of issues)</small>
+
+<sub>(otherwise people will open a ton of issues)</sub>
 
 ### The save format
 
