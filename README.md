@@ -85,10 +85,31 @@ Built with [Rust](https://www.rust-lang.org) and [Iced](https://iced.rs).
 (👁️❤️🦀🧊)
 
 ## Roadmap/To do
-[ ] Fix icon being cut off on macOS
-[ ] Add library export/import and sorting (alphabetical)
-[ ] Add Settings page with theme changer
-[ ] Import game artwork (user upload or from API)
+
+**Polish**
+- [ ] Fix icon being cut off on macOS
+- [ ] Sort library (alphabetical, rating, status, date)
+
+**Settings**
+- [ ] Settings page
+- [ ] Theme changer
+
+**Library format v2**
+- [ ] Per-entry timestamps and soft deletes (for sync)
+- [ ] Automatic migration from v1 libraries (with a backup)
+- [ ] Library export/import (import merges into your existing library)
+
+**Sync**
+- [ ] Choose where your library is stored (put it in a Google Drive, Dropbox, OneDrive, or iCloud folder to sync between computers)
+- [ ] Automatically merge changes from other computers
+- [ ] Detect and merge conflict copies created by sync apps
+
+**Artwork**
+- [ ] Add game artwork (user upload)
+- [ ] Fetch artwork from an online database
+
+**Maybe later**
+- [ ] Built-in Google Drive sync (sign in with Google)
 
 ## License
 
