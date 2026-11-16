@@ -78,7 +78,7 @@ pub fn sidebar(state: &AppState) -> Element<'_, Message> {
 }
 
 /// Sidebar nav button; uses the primary style when `active`, otherwise a muted one.
-fn nav_button<'a>(icon: char, label: &'a str, active: bool, msg: Message) -> Element<'a, Message> {
+fn nav_button(icon: char, label: &str, active: bool, msg: Message) -> Element<'_, Message> {
     button(row![text(icon).font(ICON_FONT), text(label)].spacing(8))
         .width(Fill)
         .style(if active {
@@ -102,7 +102,7 @@ pub fn page_content(state: &AppState) -> Element<'_, Message> {
             )
             .into()
         }
-        Page::Create => create_page(&state),
+        Page::Create => create_page(state),
         Page::Detail(id) => edit_page(state, id),
         Page::Credits => text_editor(&state.credits)
             .on_action(Message::CreditsAction)
@@ -158,7 +158,7 @@ fn create_page(state: &AppState) -> Element<'_, Message> {
                     .min_height(150)
                     .max_height(300)
                     .on_action(|t| Message::EditDraft(FieldEdit::Notes(t))),
-                create_button(&state),
+                create_button(state),
             ]
             .max_width(600)
             .spacing(12),
@@ -178,18 +178,14 @@ fn create_button(state: &AppState) -> Element<'_, Message> {
         } else {
             create_button.on_press(Message::CreateEntry)
         },
-        if let Some(err) = &state.create_error {
-            Some(text(err).style(text::danger))
-        } else {
-            None
-        },
+        state.create_error.as_ref().map(|err| text(err).style(text::danger)),
     ]
     .spacing(4)
     .into()
 }
 
 // ======== SHARED HELPER FUNCTIONS ========
-/// Rating pick_list with a ✕ button to clear it back to "no rating".
+/// Rating `pick_list` with a ✕ button to clear it back to "no rating".
 fn rating_picker<'a>(
     current: Option<Rating>,
     on_change: impl Fn(Option<Rating>) -> Message + 'a,
@@ -236,11 +232,7 @@ fn edit_buttons(state: &AppState, id: uuid::Uuid) -> Element<'_, Message> {
                 .on_press(Message::DeleteEntry(id)),
         ]
         .spacing(8),
-        if let Some(err) = &state.edit_error {
-            Some(text(err).style(text::danger))
-        } else {
-            None
-        },
+        state.edit_error.as_ref().map(|err| text(err).style(text::danger)),
     ]
     .spacing(4)
     .into()
@@ -307,7 +299,7 @@ fn edit_page(state: &AppState, id: uuid::Uuid) -> Element<'_, Message> {
 }
 
 // ======== GAME CARD ========
-/// Builds a game card UI element from a GameEntry struct
+/// Builds a game card UI element from a `GameEntry` struct
 fn game_card(game: &GameEntry) -> Element<'_, Message> {
     // Prepare the text first, then build the UI.
     let title = if let Some(y) = game.year {

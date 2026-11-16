@@ -24,7 +24,7 @@ use crate::ui::{page_content, sidebar};
 
 /// Formats a String like 20260408 into 2026-04-08
 fn format_date_input(raw: &str) -> String {
-    let digits: String = raw.chars().filter(|c| c.is_ascii_digit()).take(8).collect();
+    let digits: String = raw.chars().filter(char::is_ascii_digit).take(8).collect();
 
     let mut formatted = String::new();
     for (i, c) in digits.chars().enumerate() {
@@ -159,12 +159,12 @@ fn update(state: &mut AppState, message: Message) -> iced::Task<Message> {
                         }
                         Err(e) => {
                             state.games.pop();
-                            state.create_error = Some(format!("Couldn't save: {}", e));
+                            state.create_error = Some(format!("Couldn't save: {e}"));
                         }
                     }
                 }
                 Err(msg) => {
-                    state.create_error = Some(format!("Couldn't save: {}", msg));
+                    state.create_error = Some(format!("Couldn't save: {msg}"));
                 }
             }
 
@@ -268,7 +268,7 @@ fn new() -> AppState {
             rfd::MessageDialog::new()
                 .set_level(rfd::MessageLevel::Error)
                 .set_title("Cartulary")
-                .set_description(format!("Couldn't load your library: {}", e))
+                .set_description(format!("Couldn't load your library: {e}"))
                 .show();
             std::process::exit(1);
         }

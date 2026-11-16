@@ -38,7 +38,7 @@ fn get_library_path() -> Option<PathBuf> {
     Some(library_path)
 }
 
-/// Saves a slice of game entries atomically to DATA_DIR/library.json (writes to a tmp file first)
+/// Saves a slice of game entries atomically to `DATA_DIR/library.json` (writes to a tmp file first)
 pub fn save_entries(entries: &[GameEntry]) -> Result<(), Box<dyn std::error::Error>> {
     let path = get_library_path().ok_or("couldn't find app data dir")?;
     let tmp_path = path.with_extension("json.tmp");

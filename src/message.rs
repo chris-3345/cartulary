@@ -104,14 +104,14 @@ impl EntryDraft {
         Ok(GameEntry {
             id,
             title,
-            status,
-            rating,
             platform,
             store,
+            rating,
             year,
             date_started,
             date_finished,
             notes,
+            status,
         })
     }
 

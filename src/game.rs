@@ -179,7 +179,7 @@ impl From<Rating> for u8 {
 
 impl std::fmt::Display for Rating {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "★ {}/5", self.0 as f32 / 2.0)
+        write!(f, "★ {}/5", f32::from(self.0) / 2.0)
     }
 }
 
