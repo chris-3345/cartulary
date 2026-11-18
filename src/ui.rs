@@ -41,6 +41,12 @@ pub fn sidebar(state: &AppState) -> Element<'_, Message> {
             ),
             detail_button,
             space::vertical(),
+            nav_button(
+                '\u{e154}',
+                "Settings",
+                page == Page::Settings,
+                Message::OpenSettings,
+            ),
             button(
                 row![
                     text("\u{e4a3}").font(ICON_FONT),
@@ -110,6 +116,7 @@ pub fn page_content(state: &AppState) -> Element<'_, Message> {
             .size(12)
             .height(Fill)
             .into(),
+        Page::Settings => settings_page(),
     }
 }
 
@@ -178,7 +185,10 @@ fn create_button(state: &AppState) -> Element<'_, Message> {
         } else {
             create_button.on_press(Message::CreateEntry)
         },
-        state.create_error.as_ref().map(|err| text(err).style(text::danger)),
+        state
+            .create_error
+            .as_ref()
+            .map(|err| text(err).style(text::danger)),
     ]
     .spacing(4)
     .into()
@@ -232,7 +242,10 @@ fn edit_buttons(state: &AppState, id: uuid::Uuid) -> Element<'_, Message> {
                 .on_press(Message::DeleteEntry(id)),
         ]
         .spacing(8),
-        state.edit_error.as_ref().map(|err| text(err).style(text::danger)),
+        state
+            .edit_error
+            .as_ref()
+            .map(|err| text(err).style(text::danger)),
     ]
     .spacing(4)
     .into()
@@ -271,7 +284,7 @@ fn edit_page(state: &AppState, id: uuid::Uuid) -> Element<'_, Message> {
                         Message::EditDetail(FieldEdit::Status(s))
                     })
                     .width(Fill),
-                    rating_picker(state.draft.rating, |r| Message::EditDraft(
+                    rating_picker(state.draft.rating, |r| Message::EditDetail(
                         FieldEdit::Rating(r)
                     )),
                     pick_list(&Platform::ALL[..], Some(draft.platform), |p| {
@@ -341,4 +354,40 @@ fn game_card(game: &GameEntry) -> Element<'_, Message> {
         .on_press(Message::OpenDetails(game.id))
         .interaction(mouse::Interaction::Pointer)
         .into()
+}
+
+// ======== SETTINGS PAGE ========
+
+// Third party licenses menu will eventually be moved into this settings page
+/// Uses static for now since we don't need state yet (it's a stub)
+/// Uses static for now since we don't need state yet (it's a stub)
+fn settings_page() -> Element<'static, Message> {
+    scrollable(
+        container(
+            column![
+                text("Settings").font(TITLE_FONT).size(36),
+                column![
+                    text("Secondary library folder"),
+                    row![
+                        text("Not set").size(14).style(text::secondary).width(Fill),
+                        button(
+                            row![text('\u{E0D7}').font(ICON_FONT), text("Browse…")]
+                                .spacing(6)
+                                .align_y(Center),
+                        )
+                        .style(button::secondary)
+                        .padding([4, 10])
+                        .on_press(Message::PickSecondaryFolder),
+                    ]
+                    .spacing(8)
+                    .align_y(Center),
+                ]
+                .spacing(4),
+            ]
+            .max_width(600)
+            .spacing(16),
+        )
+        .center_x(Fill),
+    )
+    .into()
 }

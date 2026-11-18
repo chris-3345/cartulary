@@ -1,5 +1,6 @@
 use chrono::NaiveDate;
 use iced::widget::text_editor;
+use std::path::PathBuf;
 use uuid::Uuid;
 
 use crate::{GameEntry, Platform, Rating, Status, Store};
@@ -20,6 +21,7 @@ pub enum Message {
     OpenLibrary,
     OpenCreate,
     OpenCredits,
+    OpenSettings,
     EditDetail(FieldEdit),
     SaveEdit(Uuid),
     RevertEdit(Uuid),
@@ -28,6 +30,11 @@ pub enum Message {
     CreateEntry,
     DeleteEntry(Uuid),
     ConfirmDelete(Uuid),
+
+    // It's called a "secondary" folder instead of a cloud sync folder
+    // because it could be used for more than just cloud sync
+    PickSecondaryFolder,
+    SecondaryFolderPicked(Option<PathBuf>),
 
     // INTENTIONALLY NO-OP
     // For things that need to look active but are
@@ -139,4 +146,5 @@ pub enum Page {
     Create,
     Detail(Uuid),
     Credits,
+    Settings,
 }

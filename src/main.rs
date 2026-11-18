@@ -108,6 +108,10 @@ fn update(state: &mut AppState, message: Message) -> iced::Task<Message> {
             state.page = Page::Credits;
             Task::none()
         }
+        Message::OpenSettings => {
+            state.page = Page::Settings;
+            Task::none()
+        }
         // Edit/create/delete messages
         Message::EditDraft(edit) => apply_edit(&mut state.draft, edit),
         Message::EditDetail(edit) => apply_edit(&mut state.edit_draft, edit),
@@ -216,6 +220,18 @@ fn update(state: &mut AppState, message: Message) -> iced::Task<Message> {
 
             Task::none()
         }
+
+        // Secondary folder messages
+        Message::PickSecondaryFolder => Task::perform(
+            rfd::AsyncFileDialog::new()
+                .set_title("Choose a folder")
+                .pick_folder(),
+            |handle| Message::SecondaryFolderPicked(handle.map(|h| h.path().to_path_buf())),
+        ),
+        Message::SecondaryFolderPicked(Some(path)) => {
+            todo!()
+        }
+        Message::SecondaryFolderPicked(None) => Task::none(), // User cancelled
 
         // No-op-ish messages
         Message::CreditsAction(action) => {
