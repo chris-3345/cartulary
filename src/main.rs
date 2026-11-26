@@ -17,7 +17,7 @@ use crate::constants::APP_ID;
 use crate::constants::{CREDITS, ICON_FONT, TITLE_FONT};
 use crate::game::{GameEntry, Platform, Rating, Status, Store};
 use crate::message::{AppState, EntryDraft, FieldEdit, Message, Page};
-use crate::storage::{load_entries, save_entries};
+use crate::storage::{load_entries, load_settings, save_entries, save_settings};
 use crate::ui::{page_content, sidebar};
 
 // Helper functions ==========================
@@ -289,6 +289,22 @@ fn new() -> AppState {
             std::process::exit(1);
         }
     };
+    let (settings, settings_warning) = load_settings();
+
+    if let Some(warning) = &settings_warning {
+        rfd::MessageDialog::new()
+            .set_level(rfd::MessageLevel::Warning)
+            .set_title("Cartulary")
+            .set_description(warning)
+            .show();
+    }
+
+    let theme = iced::Theme::ALL
+        .iter()
+        .find(|t| t.to_string() == settings.theme)
+        .cloned()
+        .unwrap_or(iced::Theme::Nord); // name not recognized (typo, hand-edited file, etc.)
+
     AppState {
         games,
         page: Page::Library,
@@ -297,6 +313,8 @@ fn new() -> AppState {
         create_error: None,
         edit_draft: EntryDraft::default(),
         edit_error: None,
+        settings,
+        theme,
     }
 }
 

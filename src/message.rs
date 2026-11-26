@@ -3,7 +3,7 @@ use iced::widget::text_editor;
 use std::path::PathBuf;
 use uuid::Uuid;
 
-use crate::{GameEntry, Platform, Rating, Status, Store};
+use crate::{GameEntry, Platform, Rating, Status, Store, storage::Settings};
 
 pub struct AppState {
     pub games: Vec<GameEntry>,
@@ -13,6 +13,8 @@ pub struct AppState {
     pub create_error: Option<String>,
     pub edit_draft: EntryDraft,
     pub edit_error: Option<String>,
+    pub settings: Settings,
+    pub theme: iced::Theme,
 }
 
 #[derive(Debug, Clone)]
