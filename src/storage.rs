@@ -26,6 +26,25 @@ struct LibraryFileIn {
     games: Vec<GameEntry>,
 }
 
+/// Settings for the app
+#[derive(Serialize, Deserialize)]
+pub struct Settings {
+    pub secondary_folder: Option<PathBuf>,
+
+    // Default is Nord
+    pub theme: String,
+}
+
+impl Default for Settings {
+    fn default() -> Self {
+        Settings {
+            secondary_folder: None,
+            theme: "Nord".to_string(),
+        }
+    }
+}
+
+/// Path getters
 fn get_app_data_dir() -> Option<PathBuf> {
     ProjectDirs::from("io.github", "chris_3345", "Cartulary")
         .map(|proj_dirs| proj_dirs.data_dir().to_path_buf())
@@ -36,6 +55,80 @@ fn get_library_path() -> Option<PathBuf> {
     let library_path = data_dir.join("library.json");
 
     Some(library_path)
+}
+
+fn get_settings_path() -> Option<PathBuf> {
+    Some(get_app_data_dir()?.join("settings.json"))
+}
+
+/// Saves the Settings struct to DATA_DIR/settings.json
+pub fn save_settings(settings: &Settings) -> Result<(), Box<dyn std::error::Error>> {
+    let path = get_settings_path().ok_or("couldn't find settings file")?;
+    let tmp_path = path.with_extension("json.tmp");
+
+    if let Some(parent) = path.parent() {
+        fs::create_dir_all(parent)?;
+    }
+
+    // Write to tmp file
+    {
+        let file = File::create(&tmp_path)?;
+        let mut writer = BufWriter::new(&file);
+        let file_data = settings;
+        serde_json::to_writer_pretty(&mut writer, &file_data)?;
+        writer.flush()?;
+        file.sync_all()?;
+    }
+
+    // Atomic rename
+    fs::rename(tmp_path, path)?;
+
+    Ok(())
+}
+
+/// Loads settings. Always returns usable settings (defaults if needed),
+/// plus a warning message if something went wrong.
+pub fn load_settings() -> (Settings, Option<String>) {
+    let Some(path) = get_settings_path() else {
+        return (
+            Settings::default(),
+            Some("Couldn't find app data dir".into()),
+        );
+    };
+
+    let contents = match fs::read_to_string(&path) {
+        Ok(s) => s,
+        // First launch or settings just not created yet
+        Err(e) if e.kind() == ErrorKind::NotFound => return (Settings::default(), None),
+        // Couldn't read it but leave the file alone because it could be fine
+        Err(e) => {
+            return (
+                Settings::default(),
+                Some(format!(
+                    "Couldn't read settings.json: {e}. Using defaults for now."
+                )),
+            );
+        }
+    };
+
+    match serde_json::from_str::<Settings>(&contents) {
+        Ok(settings) => (settings, None),
+        Err(e) => {
+            let broken = path.with_file_name("settings.broken.json");
+            let warning = match fs::rename(&path, &broken) {
+                Ok(()) => format!(
+                    "settings.json couldn't be read ({e}), so your settings were reset. \
+                     The old file was moved to {}.",
+                    broken.display()
+                ),
+                Err(rename_err) => format!(
+                    "settings.json couldn't be read ({e}) and couldn't be moved \
+                     ({rename_err}). Using defaults for now."
+                ),
+            };
+            (Settings::default(), Some(warning))
+        }
+    }
 }
 
 /// Saves a slice of game entries atomically to `DATA_DIR/library.json` (writes to a tmp file first)
