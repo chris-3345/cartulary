@@ -229,7 +229,19 @@ fn update(state: &mut AppState, message: Message) -> iced::Task<Message> {
             |handle| Message::SecondaryFolderPicked(handle.map(|h| h.path().to_path_buf())),
         ),
         Message::SecondaryFolderPicked(Some(path)) => {
-            todo!()
+            // Need to rewrap because it's Some(path) in the settings
+            state.settings.secondary_folder = Some(path);
+            if let Err(e) = save_settings(&state.settings) {
+                return Task::perform(
+                    rfd::AsyncMessageDialog::new()
+                        .set_level(rfd::MessageLevel::Error)
+                        .set_title("Couldn't save settings")
+                        .set_description(format!("Couldn't save: {e}"))
+                        .show(),
+                    |_| Message::Unused,
+                );
+            }
+            Task::none()
         }
         Message::SecondaryFolderPicked(None) => Task::none(), // User cancelled
 
