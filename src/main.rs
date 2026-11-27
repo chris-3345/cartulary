@@ -272,8 +272,8 @@ fn view(state: &AppState) -> Element<'_, Message> {
 
 // Init ==========================
 
-fn theme(_state: &AppState) -> iced::Theme {
-    iced::Theme::Nord
+fn theme(state: &AppState) -> iced::Theme {
+    state.theme.clone()
 }
 
 fn window_settings() -> window::Settings {
