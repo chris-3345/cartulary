@@ -245,6 +245,24 @@ fn update(state: &mut AppState, message: Message) -> iced::Task<Message> {
         }
         Message::SecondaryFolderPicked(None) => Task::none(), // User cancelled
 
+        // Theme change messages
+        Message::ThemeChanged(theme) => {
+            state.settings.theme = theme.to_string();
+            state.theme = theme;
+
+            if let Err(e) = save_settings(&state.settings) {
+                return Task::perform(
+                    rfd::AsyncMessageDialog::new()
+                        .set_level(rfd::MessageLevel::Error)
+                        .set_title("Couldn't save settings")
+                        .set_description(format!("Couldn't save: {e}"))
+                        .show(),
+                    |_| Message::Unused,
+                );
+            }
+            Task::none()
+        }
+
         // No-op-ish messages
         Message::CreditsAction(action) => {
             // Allow selecting scrolling and copying but block typing/deleting

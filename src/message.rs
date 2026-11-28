@@ -32,6 +32,7 @@ pub enum Message {
     CreateEntry,
     DeleteEntry(Uuid),
     ConfirmDelete(Uuid),
+    ThemeChanged(iced::Theme),
 
     // It's called a "secondary" folder instead of a cloud sync folder
     // because it could be used for more than just cloud sync

@@ -8,12 +8,17 @@ use iced::widget::{
 };
 use iced::{Center, Element, Fill, Font, mouse, padding};
 
-use crate::constants::WORDMARK;
+use crate::constants::{WORDMARK_FOR_DARK, WORDMARK_FOR_LIGHT};
 use crate::message::FieldEdit;
 
 // ======== SIDEBAR ========
 /// Builds the sidebar
 pub fn sidebar(state: &AppState) -> Element<'_, Message> {
+    let wordmark = if state.theme.extended_palette().is_dark {
+        WORDMARK_FOR_DARK
+    } else {
+        WORDMARK_FOR_LIGHT
+    };
     let page = state.page;
 
     let detail_button: Element<'_, Message> = if matches!(page, Page::Detail(_)) {
@@ -24,7 +29,7 @@ pub fn sidebar(state: &AppState) -> Element<'_, Message> {
 
     container(
         column![
-            container(svg(svg::Handle::from_memory(WORDMARK)).width(175))
+            container(svg(svg::Handle::from_memory(wordmark)).width(175))
                 .center_x(Fill)
                 .padding(padding::bottom(10).top(5)),
             nav_button(
@@ -47,17 +52,6 @@ pub fn sidebar(state: &AppState) -> Element<'_, Message> {
                 page == Page::Settings,
                 Message::OpenSettings,
             ),
-            button(
-                row![
-                    text("\u{e4a3}").font(ICON_FONT),
-                    text("   Third Party Licenses").size(12)
-                ]
-                .align_y(Center),
-            )
-            .width(Fill)
-            .padding([4, 8])
-            .style(button::secondary)
-            .on_press(Message::OpenCredits),
         ]
         .spacing(15)
         .height(Fill),
@@ -116,7 +110,7 @@ pub fn page_content(state: &AppState) -> Element<'_, Message> {
             .size(12)
             .height(Fill)
             .into(),
-        Page::Settings => settings_page(),
+        Page::Settings => settings_page(state),
     }
 }
 
@@ -359,9 +353,7 @@ fn game_card(game: &GameEntry) -> Element<'_, Message> {
 // ======== SETTINGS PAGE ========
 
 // Third party licenses menu will eventually be moved into this settings page
-/// Uses static for now since we don't need state yet (it's a stub)
-/// Uses static for now since we don't need state yet (it's a stub)
-fn settings_page() -> Element<'static, Message> {
+fn settings_page(state: &AppState) -> Element<'_, Message> {
     scrollable(
         container(
             column![
@@ -378,6 +370,28 @@ fn settings_page() -> Element<'static, Message> {
                         .style(button::secondary)
                         .padding([4, 10])
                         .on_press(Message::PickSecondaryFolder),
+                    ]
+                    .spacing(8)
+                    .align_y(Center),
+                    row![pick_list(
+                        iced::Theme::ALL,
+                        Some(&state.theme),
+                        Message::ThemeChanged
+                    )]
+                    .spacing(8)
+                    .align_y(Center),
+                    row![
+                        button(
+                            row![
+                                text("\u{e4a3}").font(ICON_FONT),
+                                text("   Third Party Licenses").size(12)
+                            ]
+                            .align_y(Center),
+                        )
+                        .width(Fill)
+                        .padding([4, 8])
+                        .style(button::secondary)
+                        .on_press(Message::OpenCredits),
                     ]
                     .spacing(8)
                     .align_y(Center),
