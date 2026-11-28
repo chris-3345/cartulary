@@ -354,62 +354,72 @@ fn game_card(game: &GameEntry) -> Element<'_, Message> {
 
 // Third party licenses menu will eventually be moved into this settings page
 fn settings_page(state: &AppState) -> Element<'_, Message> {
-    let folder_description = match &state.settings.secondary_folder {
+    let folder_text = match &state.settings.secondary_folder {
         Some(path) => path.display().to_string(),
         None => "Not set".to_string(),
     };
 
-    scrollable(
-        container(
-            column![
-                text("Settings").font(TITLE_FONT).size(36),
-                column![
-                    text("Secondary library folder"),
-                    row![
-                        text(folder_description)
-                            .size(14)
-                            .style(text::secondary)
-                            .width(Fill),
-                        button(
-                            row![text('\u{E0D7}').font(ICON_FONT), text("Browse…")]
-                                .spacing(6)
-                                .align_y(Center),
-                        )
-                        .style(button::secondary)
-                        .padding([4, 10])
-                        .on_press(Message::PickSecondaryFolder),
-                    ]
-                    .spacing(8)
+    let settings = column![
+        text("Settings").font(TITLE_FONT).size(36),
+        setting_row(
+            "Theme",
+            "Changes the colors of the whole app.",
+            pick_list(iced::Theme::ALL, Some(&state.theme), Message::ThemeChanged).width(200),
+        ),
+        setting_row(
+            "Secondary library folder",
+            folder_text,
+            button(
+                row![text('\u{E0D7}').font(ICON_FONT), text("Browse…")]
+                    .spacing(6)
                     .align_y(Center),
-                    row![pick_list(
-                        iced::Theme::ALL,
-                        Some(&state.theme),
-                        Message::ThemeChanged
-                    )]
-                    .spacing(8)
-                    .align_y(Center),
-                    row![
-                        button(
-                            row![
-                                text("\u{e4a3}").font(ICON_FONT),
-                                text("   Third Party Licenses").size(12)
-                            ]
-                            .align_y(Center),
-                        )
-                        .width(Fill)
-                        .padding([4, 8])
-                        .style(button::secondary)
-                        .on_press(Message::OpenCredits),
-                    ]
-                    .spacing(8)
-                    .align_y(Center),
-                ]
-                .spacing(4),
-            ]
-            .max_width(600)
-            .spacing(16),
-        )
-        .center_x(Fill),
+            )
+            .style(button::secondary)
+            .padding([4, 10])
+            .on_press(Message::PickSecondaryFolder),
+        ),
+    ]
+    .max_width(600)
+    .spacing(24);
+
+    let licenses = button(
+        row![
+            text("\u{e4a3}").font(ICON_FONT),
+            text("Third Party Licenses").size(12),
+        ]
+        .spacing(8)
+        .align_y(Center),
     )
+    .padding([4, 8])
+    .style(button::secondary)
+    .on_press(Message::OpenCredits);
+
+    column![
+        scrollable(container(settings).center_x(Fill)).height(Fill),
+        container(licenses)
+            .center_x(Fill)
+            .padding(padding::bottom(10)),
+    ]
+    .height(Fill)
+    .into()
+}
+
+/// A label + small description on the left, a control on the right.
+fn setting_row<'a>(
+    label: &'a str,
+    description: impl Into<String>,
+    control: impl Into<Element<'a, Message>>,
+) -> Element<'a, Message> {
+    row![
+        column![
+            text(label),
+            text(description.into()).size(13).style(text::secondary),
+        ]
+        .spacing(2)
+        .width(Fill),
+        control.into(),
+    ]
+    .spacing(12)
+    .align_y(Center)
     .into()
 }
