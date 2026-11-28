@@ -354,6 +354,11 @@ fn game_card(game: &GameEntry) -> Element<'_, Message> {
 
 // Third party licenses menu will eventually be moved into this settings page
 fn settings_page(state: &AppState) -> Element<'_, Message> {
+    let folder_description = match &state.settings.secondary_folder {
+        Some(path) => path.display().to_string(),
+        None => "Not set".to_string(),
+    };
+
     scrollable(
         container(
             column![
@@ -361,7 +366,10 @@ fn settings_page(state: &AppState) -> Element<'_, Message> {
                 column![
                     text("Secondary library folder"),
                     row![
-                        text("Not set").size(14).style(text::secondary).width(Fill),
+                        text(folder_description)
+                            .size(14)
+                            .style(text::secondary)
+                            .width(Fill),
                         button(
                             row![text('\u{E0D7}').font(ICON_FONT), text("Browse…")]
                                 .spacing(6)
