@@ -1,12 +1,21 @@
 # Trademark Policy
 
-"Cartulary" and the Cartulary logo are trademarks of chris-3345
+"Cartulary" and the Cartulary logo are trademarks of chris-3345.
 
-The logo artwork is licensed under CC BY-SA 4.0 (see `./LICENSE`).
-That license covers the artwork's copyright only and does not grant any trademark rights.
-This applies to EVERYTHING in this directory, including subfolders.
+## Licensing
+
+The source code is licensed under the AGPLv3 (see `LICENSE`). The terms
+in this file are additional terms under AGPLv3 section 7(c) and 7(e):
+modified versions must be marked as different from the original, and
+no rights are granted to use the Cartulary name or logo except as
+described below.
+
+The logo and other files in `media/` (including all subfolders) are
+licensed under CC BY-SA 4.0 (see `media/LICENSE`). That license covers
+copyright in the artwork only and grants no trademark rights.
 
 ## Allowed without permission
+
 - Referring to the official project by name or logo (articles, reviews,
   tutorials, links, "works with Cartulary").
 - Redistributing unmodified official releases under the Cartulary name.
@@ -15,7 +24,8 @@ This applies to EVERYTHING in this directory, including subfolders.
   as the core functionality and user-facing behavior are unchanged.
 
 ## Not allowed without permission
-- Using the name or logo to identify a fork or substantially modified
+
+- Using the name or logo to identify a fork, a substantially modified
   version, or any derived product.
 - Using the name or logo in a way that suggests endorsement by or
   affiliation with the Cartulary project.
@@ -23,4 +33,6 @@ This applies to EVERYTHING in this directory, including subfolders.
 Forks and substantially modified versions must use a different name and
 logo.
 
-For permission or questions, open an Issue.
+## Questions
+
+For permission or questions, open an issue.
